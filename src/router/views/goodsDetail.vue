@@ -1,20 +1,20 @@
 <template>
 	<div>
-		<p>{{this.goodsId}}</p>
-		<p>{{this.goodsDetail}}</p>
-		<el-button @click="addCart()">加入购物车</el-button>
-
-		<el-table :data="this.$store.state.ShoppingCart">
-			<el-table-column prop="goodsId" width="180"></el-table-column>
-			<el-table-column prop="goodsName" label="名称" width="180">
-			</el-table-column>
-			<el-table-column prop="goodsPrice" label="价格" width="180">
-			</el-table-column>
-			<el-table-column prop="goodsNum" label="数量" width="180">
-			</el-table-column>
-		</el-table>
-		<el-button @click="buy()">支付</el-button>
-		<p>{{this.OrderDetail}}</p>
+		<div v-if="goodsDetail">
+		    <div class="product">
+		        <div class="product-image">
+					<img :src="'http://localhost:8081' + goodsDetail.picture">
+		        </div>
+		        <div class="product-info">
+		            <h1 class="product-name">{{ goodsDetail.name }}</h1>
+		            <div class="product-cost">¥ {{ goodsDetail.price }}</div>
+		           <el-button @click="addCart()">加入购物车</el-button>
+		        </div>
+		    </div>
+		    <div class="product-desc">
+		        <p>{{this.goodsDetail}}</p>
+		    </div>
+		</div>
 	</div>
 </template>
 
@@ -25,7 +25,7 @@
 		},
 		computed: {
 			goodsId() {
-				return this.$store.state.goodsId;
+				return this.$route.params.GoodsId;
 			}
 		},
 		data() {
@@ -53,7 +53,7 @@
 					"state":1,
 					"goodsList": []
 				},
-				OrderDetail:""
+				OrderDetail:Object
 			}
 		},
 		methods: {
@@ -70,34 +70,12 @@
 				});
 			},
 			addCart() {
-				var goods = {
-					"goodsId": this.goodsId,
-					"goodsName": this.goodsDetail.name,
-					"goodsPrice": this.goodsDetail.price,
-					"goodsNum": 1
-				}
-				this.$store.commit('addShoppingCart', goods);
+				var goods = this.goodsId;
+				this.$store.commit('addCart', goods);
+				alert("购买成功");
+				this.$router.push('/shoppingView');
 			},
-			buy() {
-				var goodsList=this.$store.state.ShoppingCart
-                for(var i=0;i<goodsList.length;i++){
-					var g = {
-						"goodsId": goodsList[i].goodsId,
-						"goodsNum":goodsList[i].goodsNum
-					}
-					this.UserOrder.goodsList.push(g);
-				}
-				var url = this.HOST + "/Order/set";
-				this.$axios({
-					method: "post",
-					url: url,
-					data: this.UserOrder
-				}).then(response => {
-					this.OrderDetail=response.data;
-				}).catch(e => {
-					alert("订单错误");
-				});
-			}
+			
 		},
 		mounted() {
 			this.getGoodsDetail(this.goodsId);
@@ -107,4 +85,56 @@
 </script>
 
 <style>
+	.product{
+	    margin: 32px;
+	    padding: 32px;
+	    background: #fff;
+	    border: 1px solid #dddee1;
+	    border-radius: 10px;
+	    overflow: hidden;
+	}
+	.product-image{
+	   width:200px;
+	   height:200px;
+	    float: left;
+	    text-align: center;
+	}
+	.product-image img{
+	    height: 100%;
+	}
+	.product-info{
+	    width: 50%;
+	    padding: 150px 0 250px;
+	    height: 150px;
+	    float: left;
+	    text-align: center;
+	}
+	.product-cost{
+	    color: #f2352e;
+	    margin: 8px 0;
+	}
+	.product-add-cart{
+	    display: inline-block;
+	    padding: 8px 64px;
+	    margin: 8px 0;
+	    background: #2d8cf0;
+	    color: #fff;
+	    border-radius: 4px;
+	    cursor: pointer;
+	}
+	.product-desc{
+	    background: #fff;
+	    margin: 32px;
+	    padding: 32px;
+	    border: 1px solid #dddee1;
+	    border-radius: 10px;
+	    text-align: center;
+	}
+	.product-desc img{
+	    display: block;
+	    width: 50%;
+	    margin: 32px auto;
+	    padding: 32px;
+	    border-bottom: 1px solid #dddee1;
+	}
 </style>

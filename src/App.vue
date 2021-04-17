@@ -3,20 +3,18 @@
 		<el-container>
 			<el-header>
 				<div>
-
+					<el-menu class="el-menu-demo" mode="horizontal"
+						@select="handleSelect">
+						<el-menu-item index="1">登录</el-menu-item>
+						<el-menu-item index="2">购物</el-menu-item>
+						<el-menu-item index="3">审核</el-menu-item>
+						<el-menu-item index="4">购物车</el-menu-item>
+					</el-menu>
 				</div>
 			</el-header>
 			<el-container>
 				<el-aside width="100px">
-					<div>
-						<router-link to="/login">登录</router-link>
-						<p></p>
-						<router-link to="/shopping">购物</router-link>
-						<p></p>
-						<router-link to="/audit">审核</router-link>
-						<p></p>
-						<router-link to="/chat">聊天</router-link>
-					</div>
+					
 				</el-aside>
 				<el-main>
 					<div>
@@ -33,6 +31,18 @@
 <script>
 	export default {
 		name: 'App',
+		methods:{
+			handleSelect(key, keyPath) {
+			        //console.log(key, keyPath);
+					switch(key){
+						case "1":this.$router.push('/login');break;
+						case "2":this.$router.push('/shopping');break;
+						case "3":this.$router.push('/audit');break;
+						case "4":this.$router.push('/shoppingCart');break;
+					}
+					
+	          }
+		}
 	}
 </script>
 

@@ -34,12 +34,16 @@ const routers = [{
 		component: (resolve) => require(['./router/views/register.vue'], resolve)
 	},
 	{
-		path: '/goodsDetail',
+		path: '/goodsDetail/:GoodsId',
 		component: (resolve) => require(['./router/views/goodsDetail.vue'], resolve)
+	},
+	{
+		path: '/shoppingCart',
+		component:require('./router/views/ShoppingCart.vue').default  //直接加载
 	},
 	 {
 	 	path:'*',
-	     redirect:"/login"
+	    redirect:"/shopping"
 	 }
 
 ];
@@ -54,7 +58,6 @@ const store =new Vuex.Store({
 		userId:"",
 		userName:"",
 		ShoppingCart:[],
-		goodsId:""
 	},
 	mutations:{
 		setUserId(state,userId){
@@ -63,11 +66,32 @@ const store =new Vuex.Store({
 		setUserName(state,userName){
 			state.userName=userName;
 		},
-		addShoppingCart(state,shopping){
-			state.ShoppingCart.push(shopping);
+		// 添加到购物车
+		addCart (state, id) {
+		    // 先判断购物车是否已有，如果有，数量+1
+		    const isAdded = state.ShoppingCart.find(item => item.id === id);
+		    if (isAdded) {
+		        isAdded.count ++;
+		    } else {
+		        state.ShoppingCart.push({
+		            id: id,
+		            count: 1
+		        })
+		    }
 		},
-		setGoodsId(state,goodsId){
-			state.goodsId=goodsId;
+		// 修改商品数量
+		editCartCount (state, payload) {
+		    const product = state.ShoppingCart.find(item => item.id === payload.id);
+		    product.count += payload.count;
+		},
+		// 删除商品
+		deleteCart (state, id) {
+		    const index = state.ShoppingCart.findIndex(item => item.id === id);
+		    state.ShoppingCart.splice(index, 1);
+		},
+		// 清空购物车
+		emptyCart (state) {
+		    state.ShoppingCart = [];
 		}
 	}
 	
