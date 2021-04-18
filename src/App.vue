@@ -9,6 +9,9 @@
 						<el-menu-item index="2">购物</el-menu-item>
 						<el-menu-item index="3">审核</el-menu-item>
 						<el-menu-item index="4">购物车</el-menu-item>
+						<el-menu-item index="5">收藏</el-menu-item>
+						<el-menu-item index="6">用户信息</el-menu-item>
+						<el-menu-item index="7">用户订单</el-menu-item>
 					</el-menu>
 				</div>
 			</el-header>
@@ -39,6 +42,9 @@
 						case "2":this.$router.push('/shopping');break;
 						case "3":this.$router.push('/audit');break;
 						case "4":this.$router.push('/shoppingCart');break;
+						case "5":this.$router.push('/userCollection');break;
+						case "6":this.$router.push('/userHome');break;
+						case "7":this.$router.push('/userOrder');break;
 					}
 					
 	          }

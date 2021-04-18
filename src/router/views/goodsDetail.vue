@@ -9,6 +9,7 @@
 		            <h1 class="product-name">{{ goodsDetail.name }}</h1>
 		            <div class="product-cost">¥ {{ goodsDetail.price }}</div>
 		           <el-button @click="addCart()">加入购物车</el-button>
+				   <el-button @click="addCollection()">收藏</el-button>
 		        </div>
 		    </div>
 		    <div class="product-desc">
@@ -43,17 +44,7 @@
 					"name": "",
 					"picture": "",
 					"delivery": ""
-				},
-				UserOrder: {
-					"orderNumber":"223",
-					"userId": this.$store.state.userId,
-					"allprice": 140,
-					"receiver": "朝阳区",
-					"payment":"1111",
-					"state":1,
-					"goodsList": []
-				},
-				OrderDetail:Object
+				}
 			}
 		},
 		methods: {
@@ -72,9 +63,33 @@
 			addCart() {
 				var goods = this.goodsId;
 				this.$store.commit('addCart', goods);
-				alert("购买成功");
+				alert("加入成功");
 				this.$router.push('/shoppingView');
 			},
+			addCollection(){
+				if(this.$store.state.userId != ""){
+					var url = this.HOST + "/collection/insert";
+					this.$axios({
+						method: "post",
+						url: url,
+						params:{
+							userId:this.$store.state.userId,
+							goodsId:this.goodsId
+						}
+					}).then(response => {
+						var msg = response.data;
+						if(msg==1){
+							alert("收藏成功");
+						}
+						else{
+							alert("不能重复收藏");
+						}
+					});
+				}
+				else{
+					alert("您还未登录")
+				}
+			}
 			
 		},
 		mounted() {

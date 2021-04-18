@@ -82,18 +82,30 @@
 			return {
 				goodsDetail: [],
 				UserOrder: {
-					"orderNumber": "223",
+					"orderNumber": this.generateUUID(),
 					"userId": this.$store.state.userId,
-					"allprice": 140,
-					"receiver": "朝阳区",
+					"allprice": "",
+					"receiver": "123",
 					"payment": "1111",
 					"state": 1,
 					"goodsList": []
 				},
-				OrderDetail: Object,
+				OrderDetail:{},
 			}
 		},
 		methods: {
+			generateUUID() {
+			    var d = new Date().getTime();
+			    if (window.performance && typeof window.performance.now === "function") {
+			        d += performance.now(); //use high-precision timer if available
+			    }
+			    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			        var r = (d + Math.random() * 16) % 16 | 0;
+			        d = Math.floor(d / 16);
+			        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+			    });
+			    return uuid;
+			},
 			getGoodsDetail(id) {
 				var url = this.HOST + "/goods/getGoods";
 				this.$axios({
@@ -107,24 +119,28 @@
 				});
 			},
 			buy() {
-				// var goodsList=this.$store.state.ShoppingCart
-				//    for(var i=0;i<goodsList.length;i++){
-				// 	var g = {
-				// 		"goodsId": goodsList[i].goodsId,
-				// 		"goodsNum":goodsList[i].goodsNum
-				// 	}
-				// 	this.UserOrder.goodsList.push(g);
-				// }
-				// var url = this.HOST + "/Order/set";
-				// this.$axios({
-				// 	method: "post",
-				// 	url: url,
-				// 	data: this.UserOrder
-				// }).then(response => {
-				// 	this.OrderDetail=response.data;
-				// }).catch(e => {
-				// 	alert("订单错误");
-				// });
+				var goodsList=this.$store.state.ShoppingCart
+				   for(var i=0;i<goodsList.length;i++){
+					var g = {
+						"goodsId": goodsList[i].id,
+						"goodsNum":goodsList[i].count
+					}
+					this.UserOrder.goodsList.push(g);
+				}
+				this.UserOrder.allprice=this.costAll;
+				var url = this.HOST + "/Order/set";
+				this.$axios({
+					method: "post",
+					url: url,
+					data: this.UserOrder
+				}).then(response => {
+					this.OrderDetail=response.data;
+					this.$store.commit('emptyCart');
+					alert("购买成功");
+					
+				}).catch(e => {
+					alert("订单错误");
+				});
 			},
 			deleteGoods(row) {
 				if (this.goodsCartDetail[row] != null)

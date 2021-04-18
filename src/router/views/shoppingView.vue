@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<p>欢迎用户：{{userName}}</p>
 		<div id='table'>
 			<Product v-for="item in this.goodsList.data" :info="item" :key="item.id"></Product>
 		</div>
@@ -40,24 +39,7 @@
 					this.goodsList = response.data;
 				});
 			},
-			addbuy(x){
-				console.log(this.goodsList.data[x].id);
-			},
-			addcollection(x){
-				if(this.$store.state.userId != ""){
-					var url = this.HOST + "/collection/insert";
-					this.$axios({
-						method: "post",
-						url: url,
-						params:{
-							userId:this.$store.state.userId,
-							goodsId:this.goodsList.data[x].id
-						}
-					}).then(response => {
-						alert("收藏成功");
-					});
-				}
-			}
+			
 
 		},
 		mounted() {

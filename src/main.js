@@ -39,12 +39,24 @@ const routers = [{
 	},
 	{
 		path: '/shoppingCart',
-		component:require('./router/views/ShoppingCart.vue').default  //直接加载
+		component: require('./router/views/ShoppingCart.vue').default //直接加载
 	},
-	 {
-	 	path:'*',
-	    redirect:"/shopping"
-	 }
+	{
+		path: '/userCollection',
+		component: (resolve) => require(['./router/views/userCollection.vue'], resolve)
+	},
+	{
+		path: '/userHome',
+		component: (resolve) => require(['./router/views/userHome.vue'], resolve)
+	},
+	{
+		path: '/userOrder',
+		component: (resolve) => require(['./router/views/UserOrder.vue'], resolve)
+	},
+	{
+		path: '*',
+		redirect: "/shopping"
+	}
 
 ];
 const RouterConfig = {
@@ -53,52 +65,52 @@ const RouterConfig = {
 };
 const router1 = new VueRouter(RouterConfig);
 
-const store =new Vuex.Store({
-	state:{
-		userId:"",
-		userName:"",
-		ShoppingCart:[],
+const store = new Vuex.Store({
+	state: {
+		userId: "",
+		userName: "",
+		ShoppingCart: [],
 	},
-	mutations:{
-		setUserId(state,userId){
-			state.userId=userId;
+	mutations: {
+		setUserId(state, userId) {
+			state.userId = userId;
 		},
-		setUserName(state,userName){
-			state.userName=userName;
+		setUserName(state, userName) {
+			state.userName = userName;
 		},
 		// 添加到购物车
-		addCart (state, id) {
-		    // 先判断购物车是否已有，如果有，数量+1
-		    const isAdded = state.ShoppingCart.find(item => item.id === id);
-		    if (isAdded) {
-		        isAdded.count ++;
-		    } else {
-		        state.ShoppingCart.push({
-		            id: id,
-		            count: 1
-		        })
-		    }
+		addCart(state, id) {
+			// 先判断购物车是否已有，如果有，数量+1
+			const isAdded = state.ShoppingCart.find(item => item.id === id);
+			if (isAdded) {
+				isAdded.count++;
+			} else {
+				state.ShoppingCart.push({
+					id: id,
+					count: 1
+				})
+			}
 		},
 		// 修改商品数量
-		editCartCount (state, payload) {
-		    const product = state.ShoppingCart.find(item => item.id === payload.id);
-		    product.count += payload.count;
+		editCartCount(state, payload) {
+			const product = state.ShoppingCart.find(item => item.id === payload.id);
+			product.count += payload.count;
 		},
 		// 删除商品
-		deleteCart (state, id) {
-		    const index = state.ShoppingCart.findIndex(item => item.id === id);
-		    state.ShoppingCart.splice(index, 1);
+		deleteCart(state, id) {
+			const index = state.ShoppingCart.findIndex(item => item.id === id);
+			state.ShoppingCart.splice(index, 1);
 		},
 		// 清空购物车
-		emptyCart (state) {
-		    state.ShoppingCart = [];
+		emptyCart(state) {
+			state.ShoppingCart = [];
 		}
 	}
-	
+
 });
 
 new Vue({
 	router: router1,
-	store:store, 
+	store: store,
 	render: h => h(App)
 }).$mount('#app')

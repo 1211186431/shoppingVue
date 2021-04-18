@@ -22,6 +22,7 @@
            addCart() {
            	var goods = this.info.id;
            	this.$store.commit('addCart', goods);
+			alert("加入成功");
            }
         }
     };
