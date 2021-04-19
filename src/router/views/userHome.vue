@@ -30,7 +30,8 @@
 			</el-form-item>
 		</el-form>
 		<el-button @click="getUserAddress()">收货地址</el-button>
-		<el-table :data="userAddress" v-if="userAddress.length">
+		<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
+			@current-change="handleCurrentChange">
 			<el-table-column prop="address" label="地址" width="180">
 			</el-table-column>
 			<el-table-column prop="phone" label="电话" width="180">
@@ -49,7 +50,8 @@
 		data() {
 			return {
 				userInfo: {},
-				userAddress: []
+				userAddress: [],
+				currentRow: null
 			}
 		},
 		methods: {
@@ -85,6 +87,9 @@
 						//console.log("权限不足");
 					});
 				}
+			},
+			handleCurrentChange(val){
+				this.currentRow=val;
 			}
 		},
 		mounted() {

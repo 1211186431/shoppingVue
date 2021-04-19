@@ -35,6 +35,15 @@
 				<br>
 			</div>
 		</div>
+		
+       <p>收货地址：{{currentRow}}</p>
+		<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
+			@current-change="handleCurrentChange">
+			<el-table-column prop="address" label="地址" width="180">
+			</el-table-column>
+			<el-table-column prop="phone" label="电话" width="180">
+			</el-table-column>
+		</el-table>
 		<el-button @click="buy()">支付</el-button>
 	</div>
 </template>
@@ -85,26 +94,29 @@
 					"orderNumber": this.generateUUID(),
 					"userId": this.$store.state.userId,
 					"allprice": "",
-					"receiver": "123",
+					"receiver": null,
 					"payment": "1111",
 					"state": 1,
+					"purchasingDate":"",
 					"goodsList": []
 				},
-				OrderDetail:{},
+				OrderDetail: {},
+				userAddress: [],
+				currentRow: null
 			}
 		},
 		methods: {
 			generateUUID() {
-			    var d = new Date().getTime();
-			    if (window.performance && typeof window.performance.now === "function") {
-			        d += performance.now(); //use high-precision timer if available
-			    }
-			    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-			        var r = (d + Math.random() * 16) % 16 | 0;
-			        d = Math.floor(d / 16);
-			        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-			    });
-			    return uuid;
+				var d = new Date().getTime();
+				if (window.performance && typeof window.performance.now === "function") {
+					d += performance.now(); //use high-precision timer if available
+				}
+				var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+					var r = (d + Math.random() * 16) % 16 | 0;
+					d = Math.floor(d / 16);
+					return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+				});
+				return uuid;
 			},
 			getGoodsDetail(id) {
 				var url = this.HOST + "/goods/getGoods";
@@ -119,34 +131,39 @@
 				});
 			},
 			buy() {
-				var goodsList=this.$store.state.ShoppingCart
-				   for(var i=0;i<goodsList.length;i++){
-					var g = {
-						"goodsId": goodsList[i].id,
-						"goodsNum":goodsList[i].count
+				if (this.UserOrder.receiver != null) {
+					this.UserOrder.purchasingDate=new Date();
+					var goodsList = this.$store.state.ShoppingCart
+					for (var i = 0; i < goodsList.length; i++) {
+						var g = {
+							"goodsId": goodsList[i].id,
+							"goodsNum": goodsList[i].count
+						}
+						this.UserOrder.goodsList.push(g);
 					}
-					this.UserOrder.goodsList.push(g);
-				}
-				this.UserOrder.allprice=this.costAll;
-				var url = this.HOST + "/Order/set";
-				this.$axios({
-					method: "post",
-					url: url,
-					data: this.UserOrder
-				}).then(response => {
-					this.OrderDetail=response.data;
-					this.$store.commit('emptyCart');
-					alert("购买成功");
-					
-				}).catch(e => {
-					alert("订单错误");
-				});
+					this.UserOrder.allprice = this.costAll;
+					var url = this.HOST + "/Order/set";
+					this.$axios({
+						method: "post",
+						url: url,
+						data: this.UserOrder
+					}).then(response => {
+						this.OrderDetail = response.data;
+						this.$store.commit('emptyCart');
+						alert("购买成功");
+
+					}).catch(e => {
+						alert("订单错误");
+					});
+				} else
+					alert("未选择地址");
+
 			},
 			deleteGoods(row) {
 				if (this.goodsCartDetail[row] != null)
 					this.$store.commit('deleteCart', this.goodsCartDetail[row].id);
 			},
-			editGoods(row, num) {  //编辑方法放vuex那边写了
+			editGoods(row, num) { //编辑方法放vuex那边写了
 				if (this.goodsCartDetail[row] != null) {
 					if (num < 0 && this.goodsCartDetail[row].count === 1) return;
 					this.$store.commit('editCartCount', {
@@ -154,6 +171,23 @@
 						count: num
 					});
 				}
+			},
+			handleCurrentChange(val) {
+				this.currentRow = val;
+				this.UserOrder.receiver = val.id;
+			},
+			getUserAddress() {
+				var that = this;
+				var url = this.HOST + "/user/getUserAddress";
+				that.$axios({
+					method: "get",
+					url: url,
+					params: {
+						userId: this.$store.state.userId
+					}
+				}).then(response => {
+					this.userAddress = response.data
+				});
 			}
 		},
 		mounted() {
@@ -162,6 +196,7 @@
 					this.getGoodsDetail(this.goodsCart[i].id)
 				}
 			}
+			this.getUserAddress();
 		}
 	}
 </script>
