@@ -7,11 +7,12 @@
 						@select="handleSelect">
 						<el-menu-item index="1">登录</el-menu-item>
 						<el-menu-item index="2">购物</el-menu-item>
-						<el-menu-item index="3">审核</el-menu-item>
+						<el-menu-item index="3">管理员</el-menu-item>
 						<el-menu-item index="4">购物车</el-menu-item>
 						<el-menu-item index="5">收藏</el-menu-item>
 						<el-menu-item index="6">用户信息</el-menu-item>
 						<el-menu-item index="7">用户订单</el-menu-item>
+						<el-menu-item index="8">商家</el-menu-item>
 					</el-menu>
 				</div>
 			</el-header>
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+	
 	export default {
 		name: 'App',
 		methods:{
@@ -44,6 +46,7 @@
 						case "5":this.$router.push('/userCollection');break;
 						case "6":this.$router.push('/userHome');break;
 						case "7":this.$router.push('/userOrder');break;
+						case "8":this.$router.push('/sellerHome');break;
 					}
 					
 	          }

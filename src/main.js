@@ -50,6 +50,18 @@ const routers = [{
 		component: (resolve) => require(['./router/views/userHome.vue'], resolve)
 	},
 	{
+		path: '/sellerHome',
+		component: (resolve) => require(['./router/views/seller/sellerHome.vue'], resolve)
+	},
+	{
+		path: '/sellerGoods',
+		component: (resolve) => require(['./router/views/seller/sellerGoods.vue'], resolve)
+	},
+	{
+		path: '/sellerGoodsDetails/:goodsId',
+		component: (resolve) => require(['./router/views/seller/sellerGoodsDetails.vue'], resolve)
+	},
+	{
 		path: '/userOrder',
 		component: (resolve) => require(['./router/views/UserOrder.vue'], resolve)
 	},
