@@ -13,6 +13,7 @@
 						<el-menu-item index="6">用户信息</el-menu-item>
 						<el-menu-item index="7">用户订单</el-menu-item>
 						<el-menu-item index="8">商家</el-menu-item>
+						<el-menu-item index="9">聊天</el-menu-item>
 					</el-menu>
 				</div>
 			</el-header>
@@ -47,6 +48,7 @@
 						case "6":this.$router.push('/userHome');break;
 						case "7":this.$router.push('/userOrder');break;
 						case "8":this.$router.push('/sellerHome');break;
+						case "9":this.$router.push('/chat');break;
 					}
 					
 	          }
