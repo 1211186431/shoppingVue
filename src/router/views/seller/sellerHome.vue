@@ -20,7 +20,6 @@
 				<el-form action="http://localhost:8081/Audit/insert" method="post" enctype="multipart/form-data">
 					<label>上传图片</label>
 					<el-input type="file" name="certificates" v-model="file1" id="certificates" />
-					<el-input type="text" v-model="userId" name="userId"></el-input>
 					<!-- <el-input type="submit" value="上传" /> -->
 					<el-button @click="setAudit()">成为商家</el-button>
 				</el-form>
@@ -102,7 +101,7 @@
 				return "http://localhost:8081" + picUrl;
 			},
 			setAudit() {
-				var url = this.HOST + "/Audit/insert";
+				var url = this.HOST + "/audit/insert";
 				const param = new FormData();
 				var file_obj = document.getElementById('certificates').files[0];
 				param.append("certificates", file_obj);

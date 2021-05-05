@@ -5,7 +5,7 @@
 				<div>
 					<el-menu class="el-menu-demo" mode="horizontal"
 						@select="handleSelect">
-						<el-menu-item index="1">登录</el-menu-item>
+						<el-menu-item index="1" v-if="userName.length==0">登录</el-menu-item>
 						<el-menu-item index="2">购物</el-menu-item>
 						<el-menu-item index="3">管理员</el-menu-item>
 						<el-menu-item index="4">购物车</el-menu-item>
@@ -14,13 +14,11 @@
 						<el-menu-item index="7">用户订单</el-menu-item>
 						<el-menu-item index="8">商家</el-menu-item>
 						<el-menu-item index="9">聊天</el-menu-item>
+						<el-menu-item index="10">登出</el-menu-item>
 					</el-menu>
 				</div>
 			</el-header>
 			<el-container>
-				<el-aside width="100px">
-					
-				</el-aside>
 				<el-main>
 					<div>
 						<router-view></router-view>
@@ -34,9 +32,16 @@
 </template>
 
 <script>
-	
 	export default {
 		name: 'App',
+		components:{
+			
+		},
+		computed:{
+			userName(){
+				return this.$store.state.userName;
+			}
+		},
 		methods:{
 			handleSelect(key, keyPath) {
 					switch(key){
@@ -49,9 +54,34 @@
 						case "7":this.$router.push('/userOrder');break;
 						case "8":this.$router.push('/sellerHome');break;
 						case "9":this.$router.push('/chat');break;
+						case "10":this.logout();break;
 					}
 					
-	          }
+	          },
+			  logout(){
+				  var url = this.HOST + "/logout";
+				  this.$axios({
+				  	method: "post",
+				  	headers: {
+				  		'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+				  	},
+				  	url: url
+				  }).then(response => {
+				  		alert(response.data.msg);
+						this.$router.push('/login');
+						this.$store.commit('setUserId', "");
+						this.$store.commit('setUserName',"");
+						this.$store.commit('emptyCart');
+				  });
+				  
+			  }
+			  
+		},
+		created() {
+				sessionStorage.getItem("userMsg") && this.$store.replaceState(JSON.parse(sessionStorage.getItem("userMsg")));
+				window.addEventListener("beforeunload",()=>{
+				    sessionStorage.setItem("userMsg",JSON.stringify(this.$store.state))
+				})
 		}
 	}
 </script>

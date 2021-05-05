@@ -1,20 +1,74 @@
 <template>
 	<div>
 		<div v-if="goodsDetail">
-		    <div class="product">
-		        <div class="product-image">
-					<img :src="'http://localhost:8081' + goodsDetail.picture">
-		        </div>
-		        <div class="product-info">
-		            <h1 class="product-name">{{ goodsDetail.name }}</h1>
-		            <div class="product-cost">¥ {{ goodsDetail.price }}</div>
-		           <el-button @click="addCart()">加入购物车</el-button>
-				   <el-button @click="addCollection()">收藏</el-button>
-		        </div>
-		    </div>
-		    <div class="product-desc">
-		        <p>{{this.goodsDetail}}</p>
-		    </div>
+			<div class="product">
+				<el-row :gutter="10">
+					<el-col :span="10">
+						<div class="img">
+							<img :src="this.PicHOST+goodsDetail.picture">
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-name">
+							<h1 class="name">{{goodsDetail.name}}</h1>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-price">
+							<span style="font-size:15px ;color:  #717273;">售价 ￥</span>
+							<div class="price">{{goodsDetail.price}}</div>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-inventory">
+							<span style="font-size:15px ;color:  #717273;">库存 :</span>
+							<div class="inventory">{{goodsDetail.inventory}}</div>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-oldAndnew">
+							<span style="font-size:15px ;color:  #717273;">新旧程度 :</span>
+							<div class="oldAndnew">{{goodsDetail.oldAndnew}}</div>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-bargain">
+							<span style="font-size:15px ;color:  #717273;">是否接受还价 :</span>
+							<div class="bargain">
+								<el-switch v-model="bargain"></el-switch>
+							</div>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="product-delivery">
+							<span style="font-size:15px ;color:  #717273;">发货地 :</span>
+							<div class="delivery">{{goodsDetail.delivery}}</div>
+						</div>
+					</el-col>
+
+					<el-col :span="14">
+						<div class="addCart">
+							<el-button type="primary" @click="addCart">加入购物车</el-button>
+						</div>
+						<div class="collection">
+							<el-button icon="el-icon-star-off">未收藏</el-button>
+						</div>
+					</el-col>
+					<el-col :span="14">
+						<div class="info">
+							{{goodsDetail.details}}
+						</div>
+
+					</el-col>
+				</el-row>
+
+			</div>
 		</div>
 	</div>
 </template>
@@ -22,11 +76,17 @@
 <script>
 	export default {
 		components: {
-
+			
 		},
 		computed: {
 			goodsId() {
 				return this.$route.params.GoodsId;
+			},
+			bargain() {
+				if (this.goodsDetail.bargain == 0)
+					return false;
+				else
+					return true;
 			}
 		},
 		data() {
@@ -39,7 +99,7 @@
 					"state": "",
 					"details": "",
 					"onsaleDate": "",
-					"bargain": "",
+					"bargain": 0,
 					"price": "",
 					"name": "",
 					"picture": "",
@@ -66,31 +126,29 @@
 				alert("加入成功");
 				this.$router.push('/shoppingView');
 			},
-			addCollection(){
-				if(this.$store.state.userId != ""){
+			addCollection() {
+				if (this.$store.state.userId != "") {
 					var url = this.HOST + "/collection/insert";
 					this.$axios({
 						method: "post",
 						url: url,
-						params:{
-							userId:this.$store.state.userId,
-							goodsId:this.goodsId
+						params: {
+							userId: this.$store.state.userId,
+							goodsId: this.goodsId
 						}
 					}).then(response => {
 						var msg = response.data;
-						if(msg==1){
+						if (msg == 1) {
 							alert("收藏成功");
-						}
-						else{
+						} else {
 							alert("不能重复收藏");
 						}
 					});
-				}
-				else{
+				} else {
 					alert("您还未登录")
 				}
 			}
-			
+
 		},
 		mounted() {
 			this.getGoodsDetail(this.goodsId);
@@ -100,56 +158,148 @@
 </script>
 
 <style>
-	.product{
-	    margin: 32px;
-	    padding: 32px;
-	    background: #fff;
-	    border: 1px solid #dddee1;
-	    border-radius: 10px;
-	    overflow: hidden;
+	.info {
+		text-align: left;
+		font-size: small;
 	}
-	.product-image{
-	   width:200px;
-	   height:200px;
-	    float: left;
-	    text-align: center;
+
+	.collection {
+		float: left;
+		display: inline;
+		margin-left: 10px;
+		margin-bottom: 30px;
 	}
-	.product-image img{
-	    height: 100%;
+
+	.addCart {
+		float: left;
+		display: inline;
+		margin-bottom: 30px;
 	}
-	.product-info{
-	    width: 50%;
-	    padding: 150px 0 250px;
-	    height: 150px;
-	    float: left;
-	    text-align: center;
+
+	.product-delivery {
+		text-align: left;
+		margin-bottom: 30px;
 	}
-	.product-cost{
-	    color: #f2352e;
-	    margin: 8px 0;
+
+	.delivery {
+		color: #717273;
+		font-size: 18px;
+		text-align: left;
+		display: inline;
 	}
-	.product-add-cart{
-	    display: inline-block;
-	    padding: 8px 64px;
-	    margin: 8px 0;
-	    background: #2d8cf0;
-	    color: #fff;
-	    border-radius: 4px;
-	    cursor: pointer;
+
+	.product-bargain {
+
+		text-align: left;
+		margin-bottom: 10px;
 	}
-	.product-desc{
-	    background: #fff;
-	    margin: 32px;
-	    padding: 32px;
-	    border: 1px solid #dddee1;
-	    border-radius: 10px;
-	    text-align: center;
+
+	.bargain {
+		color: #717273;
+		font-size: 20px;
+		text-align: left;
+		display: inline;
 	}
-	.product-desc img{
-	    display: block;
-	    width: 50%;
-	    margin: 32px auto;
-	    padding: 32px;
-	    border-bottom: 1px solid #dddee1;
+
+	.product-oldAndnew {
+		text-align: left;
+		margin-bottom: 10px;
+	}
+
+	.oldAndnew {
+		color: #717273;
+		font-size: 20px;
+		text-align: left;
+		display: inline;
+	}
+
+	.inventory {
+		color: #717273;
+		font-size: 20px;
+		text-align: left;
+		display: inline;
+	}
+
+	.product-inventory {
+		text-align: left;
+		margin-bottom: 10px;
+	}
+
+	.product-price {
+		text-align: left;
+		margin-bottom: 10px;
+	}
+
+	.price {
+		color: red;
+		font-size: 20px;
+		text-align: left;
+		display: inline;
+	}
+
+	.product-name {
+		margin-bottom: 10px;
+	}
+
+	.name {
+		font-size: 20px;
+		color: #717273;
+		text-align: left;
+	}
+
+	.img {
+		margin-left: 40px;
+		border: 2px solid #dddee1;
+		border-radius: 10px;
+		height: 500px;
+		width: 500px;
+
+	}
+
+	.img img {
+		height: 100%;
+		width: 100%;
+	}
+
+	.product {
+		margin: 32px;
+		padding: 32px;
+		background: #fff;
+		border: 2px solid #dddee1;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	.el-row {
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.el-col {
+		border-radius: 4px;
+	}
+
+	.bg-purple-dark {
+		background: #99a9bf;
+	}
+
+	.bg-purple {
+		background: #d3dce6;
+	}
+
+	.bg-purple-light {
+		background: #e5e9f2;
+	}
+
+	.grid-content {
+		border-radius: 4px;
+		min-height: 36px;
+	}
+
+	.row-bg {
+		padding: 10px 0;
+		background-color: #f9fafc;
 	}
 </style>

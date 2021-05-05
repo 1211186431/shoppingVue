@@ -7,7 +7,7 @@
 		</el-table>
 		<el-button @click="sgoods=true">添加商品</el-button>
 		<el-button>查看商品审核状态</el-button>
-			<SGoods v-if="sgoods" :sellerId="userId"></SGoods>
+		<SGoods v-if="sgoods" :sellerId="userId"></SGoods>
 	</div>
 
 </template>

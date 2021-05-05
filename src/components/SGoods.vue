@@ -32,7 +32,7 @@
 		</el-form>
 		<div>
 			<el-upload :action="uuu" :data="u" list-type="picture-card" :on-preview="handlePictureCardPreview"
-				:on-remove="handleRemove" :auto-upload="false"  :on-success="onUpload" ref="upload">
+				:on-remove="handleRemove" :auto-upload="false" :on-success="onUpload" ref="upload">
 				<i class="el-icon-plus"></i>
 			</el-upload>
 			<el-dialog :visible.sync="dialogVisible">
@@ -66,12 +66,12 @@
 					"goodstype": []
 				},
 				goodstypes: [],
-				setType:[],
+				setType: [],
 				dialogImageUrl: '',
 				dialogVisible: false,
 				uuu: this.HOST + "/goods/uploadPic",
 				u: {
-					goodsId:15
+					goodsId: null
 				}
 			}
 		},
@@ -93,20 +93,28 @@
 				this.dialogVisible = true;
 			},
 			CreateGoods() {
-				if(this.setType!=null){
-					for(var i=0;i<this.setType.length;i++)
-					  this.goodsDetail.goodstype.push(this.goodstypes[this.setType[i]])
+				if (this.setType != null) {
+					for (var i = 0; i < this.setType.length; i++){
+						var t=this.setType[i];
+						for(var j=0;j<this.goodstypes.length;j++){
+						     if(this.goodstypes[j].type_id==t){
+								  this.goodsDetail.goodstype.push(this.goodstypes[j]);
+								  break;
+							 }
+						}
+					}
 				}
-				
-				 var url = this.HOST + "/goods/insertGoods";
-				 this.$axios({
-				 	method: "post",
-				 	url: url,
-					data:this.goodsDetail
-				 }).then(response => {
-					 this.u.goodsId=response.data;
-				 	 this.$refs.upload.submit();
-				 });
+				var url = this.HOST + "/goods/insertGoods";
+				this.$axios({
+					method: "post",
+					url: url,
+					data: this.goodsDetail
+				}).then(response => {
+					this.u.goodsId = response.data;
+					if (this.u.goodsId != null)
+						this.$refs.upload.submit();
+					alert("插入成功");
+				});
 			},
 			onUpload(response, file, fileList) { //成功上传
 				console.log(response);

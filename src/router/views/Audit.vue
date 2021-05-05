@@ -5,10 +5,10 @@
 		<el-button @click="acomment=true">查看评论</el-button>
 		<el-button @click="auser=true">查看用户</el-button>
 		<div v-show="aseller">
-			<el-table :data="audit" style="width: 100%">
+			<el-table :data="audit" style="width: 100%" @row-click="upDateAudit">
 				<el-table-column prop="id" width="0">
 				</el-table-column>
-				<el-table-column prop="user_id" label="用户名" width="180">
+				<el-table-column prop="user_id" label="用户id" width="180">
 				</el-table-column>
 				<el-table-column prop="certificates" label="证件" width="180">
 					<template slot-scope="scope">
@@ -46,8 +46,8 @@
 		<div v-show="auser">
 			<p>用户</p>
 			<el-table :data="users">
-			<el-table-column prop="id" label="用户id"></el-table-column>
-			<el-table-column prop="state" label="状态"></el-table-column>
+				<el-table-column prop="id" label="用户id"></el-table-column>
+				<el-table-column prop="state" label="状态"></el-table-column>
 			</el-table>
 		</div>
 	</div>
@@ -72,16 +72,13 @@
 					certificates: "",
 					state: ""
 				},
-				goods:[],
-				comments:[],
-				users:[],
-				aseller:false,
-				agoods:false,
-				acomment:false,
-				auser:false
-				// userPic: "",
-				// file1: ""
-				
+				goods: [],
+				comments: [],
+				users: [],
+				aseller: false,
+				agoods: false,
+				acomment: false,
+				auser: false
 			}
 		},
 		methods: {
@@ -101,7 +98,7 @@
 					//console.log("权限不足");
 				});
 			},
-			getGoods(){
+			getGoods() {
 				var that = this;
 				// eslint-disable-next-line no-undef
 				var url = this.HOST + "/Audit/getOffGoods";
@@ -114,20 +111,19 @@
 					//console.log("权限不足");
 				});
 			},
-			getComment(){
+			getComment() {
 				var that = this;
-				// eslint-disable-next-line no-undef
 				var url = this.HOST + "/Audit/getAllComment";
 				that.$axios({
 					method: "get",
 					url: url,
 				}).then(response => {
-					this.comments= response.data
+					this.comments = response.data
 				}).catch(e => {
 					//console.log("权限不足");
 				});
 			},
-			getUser(){
+			getUser() {
 				var that = this;
 				// eslint-disable-next-line no-undef
 				var url = this.HOST + "/Audit/getAllUser";
@@ -135,26 +131,25 @@
 					method: "get",
 					url: url,
 				}).then(response => {
-					this.users= response.data
+					this.users = response.data
 				}).catch(e => {
 					//console.log("权限不足");
 				});
 			},
 			getPicUrl(x) {
 				var picUrl = this.audit[x].certificates;
-				return "http://localhost:8081" + picUrl;
+				return this.HOST + picUrl;
 			},
 			getPicUrl2(x) {
 				var picUrl = this.goods[x].picture;
-				return "http://localhost:8081" + picUrl;
+				return this.HOST + picUrl;
 			},
-			setAudit() {
-
+			upDateAudit(row) {
 				// var url = this.HOST + "/Audit/insert";
 				// const param = new FormData();
 				// var file_obj = document.getElementById('certificates').files[0];
 				// param.append("certificates", file_obj);
-    //             param.append("userId", this.userId1);
+				//             param.append("userId", this.userId1);
 				// const config = {
 				// 	headers: {
 				// 		"Content-Type": "multipart/form-data"
@@ -163,7 +158,33 @@
 				// this.$axios.post(url, param, config).then(res => {
 				// 	console.log(res);
 				// });
-
+				this.$confirm('修改状态?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					var that = this;
+					var url = this.HOST + "/Audit/admin/updateAudit";
+					that.$axios({
+						method: "post",
+						url: url,
+						params:{
+							"AuditId":row.id,
+							"state":1
+						}
+					}).then(response => {
+						this.$message({
+							type: 'success',
+							message: '修改成功!'
+						});
+					});
+					row.state=1;
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消修改'
+					});
+				});
 
 			}
 		},

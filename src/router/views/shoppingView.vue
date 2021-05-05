@@ -1,16 +1,28 @@
 <template>
 	<div>
-		<div id='table'>
-			<Product v-for="item in this.goodsList.data" :info="item" :key="item.id"></Product>
-		</div>
-		<div>
-			<el-pagination
-			    layout="prev, pager, next"
-			    :total="this.goodsList.totalPages*10"
-				@current-change="PageChage">
-			  </el-pagination>
-		</div>
-		
+		<el-row>
+			<el-col :span="10">
+				<el-input placeholder="请输入内容" v-model="searchName"></el-input>
+			</el-col>
+			<el-col :span="5">
+				<el-button icon="el-icon-search" circle @click="searchGoods()"></el-button>
+			</el-col>
+		</el-row>
+
+		<el-row>
+			<div id='table'>
+				<Product v-for="item in this.goodsList.data" :info="item" :key="item.id"></Product>
+			</div>
+		</el-row>
+		<el-row>
+			<div>
+				<el-pagination layout="prev, pager, next" :total="this.goodsList.totalPages*10"
+					@current-change="PageChage">
+				</el-pagination>
+			</div>
+		</el-row>
+
+
 	</div>
 </template>
 
@@ -18,7 +30,7 @@
 	import Product from "../../components/product.vue"
 	export default {
 		components: {
-             Product
+			Product
 		},
 		computed: {
 			userName() {
@@ -32,9 +44,10 @@
 					"pageSize": 0,
 					"totalSize": 0,
 					"totalPages": 0,
-					 data: []
+					data: []
 				},
-				test1:false
+				test1: false,
+				searchName: ""
 			}
 		},
 		methods: {
@@ -47,18 +60,34 @@
 					this.goodsList = response.data;
 				});
 			},
-			PageChage(x){
+			PageChage(x) {
 				var url = this.HOST + "/goods/getAllGoodsShow";
 				this.$axios({
 					method: "get",
 					url: url,
-					params:{
-						pageNum:x
+					params: {
+						pageNum: x
 					}
 				}).then(response => {
 					console.log(response.data);
 					this.goodsList = response.data;
 				});
+			},
+			searchGoods() {
+				if (this.searchName == "") {
+					this.getGoods();
+				} else {
+					var url = this.HOST + "/goods/getGoodsShowByName";
+					this.$axios({
+						method: "get",
+						url: url,
+						params: {
+							"name": this.searchName
+						}
+					}).then(response => {
+						this.goodsList = response.data;
+					});
+				}
 			}
 
 		},

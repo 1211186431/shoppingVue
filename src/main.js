@@ -7,7 +7,7 @@ import Stomp from "stompjs"
 import VueRouter from 'vue-router'
 Vue.prototype.$axios = axios;
 Vue.prototype.HOST = "/api";
-
+Vue.prototype.PicHOST = "http://localhost:8081";
 import 'element-ui/lib/theme-chalk/index.css';
 import Vuex from "vuex";
 Vue.use(ElementUI);

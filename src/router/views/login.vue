@@ -1,16 +1,18 @@
 <template>
-	<div>
-		<el-form label-width="80px" v-model="user" method="post" action="http://localhost:8081/login">
-			<el-form-item label="用户名">
-				<el-input name="name" v-model="user.name"></el-input>
+	<div class="login">
+		<el-form class="form" :model="user" ref="form">
+			<h3 style="text-align: center;">登录界面</h3>
+			<el-form-item label="用户名" label-width="80px" prop="name">
+				<el-input class="item" v-model="user.name"></el-input>
 			</el-form-item>
-			<el-form-item label="密码">
-				<el-input name="password" type="password" v-model="user.password"></el-input>
+			<el-form-item label="密码" label-width="80px" prop="password">
+				<el-input class="item" v-model="user.password" show-password ></el-input>
 			</el-form-item>
-			<!-- <el-input type="submit" value="Submit"></el-input> -->
-			<el-button @click="login()">登录</el-button>
+			<el-form-item style="text-align: center;">
+				<el-button type="primary" @click="login">登录</el-button>
+				<el-button @click="$router.push('/register')">注册</el-button>
+			</el-form-item>
 		</el-form>
-		<router-link to="/register">注册</router-link>
 	</div>
 </template>
 
@@ -22,12 +24,38 @@
 					name: "",
 					password: ""
 				},
-				myResponse:{
-					msg:"",
-					status:""
+				myResponse: {
+					msg: "",
+					status: ""
 				},
-				userId:"",
-				userName:""
+				userId: "",
+				userName: "",
+				rules: {
+					name: [{
+							required: true,
+							message: "请输入用户名",
+							trigger: "blur"
+						},
+						{
+							min: 3,
+							max: 5,
+							message: "长度在 3 到 5 个字符",
+							trigger: "blur"
+						}
+					],
+					password: [{
+							required: true,
+							message: "请输入密码",
+							trigger: "blur"
+						},
+						{
+							min: 6,
+							max: 12,
+							message: "长度在 6 到 12 个字符",
+							trigger: "blur"
+						}
+					]
+				}
 			}
 		},
 		methods: {
@@ -45,15 +73,14 @@
 					}
 				}).then(response => {
 					this.myResponse = response.data;
-				    if(this.myResponse.status==200){
-						this.userId=this.myResponse.msg.id;
-						this.userName=this.myResponse.msg.name;
-						this.$store.commit('setUserId',this.userId);
-						this.$store.commit('setUserName',this.userName);
+					if (this.myResponse.status == 200) {
+						this.userId = this.myResponse.msg.id;
+						this.userName = this.myResponse.msg.name;
+						this.$store.commit('setUserId', this.userId);
+						this.$store.commit('setUserName', this.userName);
 						this.$router.push('/shopping');
-					}
-					else if(this.myResponse.status == 401){
-						 alert(this.myResponse.msg);
+					} else if (this.myResponse.status == 401) {
+						alert(this.myResponse.msg);
 					}
 				});
 			}
@@ -63,4 +90,24 @@
 </script>
 
 <style>
+	.login {
+		background-color: #909399;
+		height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: auto;
+	}
+
+	.form {
+		width: 40%;
+		margin-bottom: 20vh;
+		background-color: white;
+		border-radius: 2px;
+		padding: 5% 3%;
+	}
+
+	.item {
+		width: 75%;
+	}
 </style>
