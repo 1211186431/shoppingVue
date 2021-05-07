@@ -78,6 +78,7 @@
 						this.userName = this.myResponse.msg.name;
 						this.$store.commit('setUserId', this.userId);
 						this.$store.commit('setUserName', this.userName);
+						sessionStorage.setItem("userMsg",JSON.stringify(this.$store.state));
 						this.$router.push('/shopping');
 					} else if (this.myResponse.status == 401) {
 						alert(this.myResponse.msg);

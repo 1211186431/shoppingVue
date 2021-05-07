@@ -1,5 +1,5 @@
 module.exports = {   
- 	publicPath: "./",
+ 	publicPath: "/",
  	// 构建时的输出目录
  	outputDir: "dist",
  	// 放置静态资源的目录

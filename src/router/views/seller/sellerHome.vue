@@ -166,12 +166,9 @@
 			}
 		},
 		mounted() {
-			if (this.userId != "") {
 				this.getAudit(); //获取申请
 				this.getSellerInfo();
 				this.getSellerOrder();
-			} else
-				alert("未登录")
 		}
 	}
 </script>

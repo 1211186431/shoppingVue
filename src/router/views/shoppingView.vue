@@ -10,7 +10,7 @@
 		</el-row>
 
 		<el-row>
-			<div id='table'>
+			<div id>
 				<Product v-for="item in this.goodsList.data" :info="item" :key="item.id"></Product>
 			</div>
 		</el-row>

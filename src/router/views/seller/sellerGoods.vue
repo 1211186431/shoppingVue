@@ -1,6 +1,6 @@
 <template>
 	<div>
-        <p>{{userId}}</p>
+		<p>{{userId}}</p>
 		<el-table :data="goodsDetail" @row-click="clickGoods">
 			<el-table-column prop="id" label="商品id"></el-table-column>
 			<el-table-column prop="inventory" label="库存"></el-table-column>
@@ -16,21 +16,21 @@
 	import SGoods from '../../../components/SGoods.vue'
 	export default {
 		components: {
-		   SGoods
+			SGoods
 		},
 		computed: {
 			userId() {
 				return this.$store.state.userId;
 			}
 		},
-		data(){
-			return{
-				goodsDetail:[],
-				sgoods:false
+		data() {
+			return {
+				goodsDetail: [],
+				sgoods: false
 			}
 		},
-		methods:{
-			getSellerGoods(){
+		methods: {
+			getSellerGoods() {
 				var that = this;
 				var url = this.HOST + "/goods/get/Byseller";
 				that.$axios({
@@ -43,15 +43,12 @@
 					this.goodsDetail = response.data
 				});
 			},
-			clickGoods(row){
-				this.$router.push('/sellerGoodsDetails/'+row.id);
+			clickGoods(row) {
+				this.$router.push('/sellerGoodsDetails/' + row.id);
 			}
 		},
 		mounted() {
-			if (this.userId != "") {
-				this.getSellerGoods();
-			} else
-				alert("未登录")
+			this.getSellerGoods();
 		}
 
 	}

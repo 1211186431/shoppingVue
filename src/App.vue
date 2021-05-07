@@ -68,16 +68,19 @@
 				  	url: url
 				  }).then(response => {
 				  		alert(response.data.msg);
-						this.$router.push('/login');
 						this.$store.commit('setUserId', "");
 						this.$store.commit('setUserName',"");
 						this.$store.commit('emptyCart');
+						sessionStorage.clear();
+						this.$router.push('/login');
 				  });
 				  
 			  }
 			  
 		},
 		created() {
+			//创建时，将vuex中替换为session中数据
+			//刷新时，将store中数据保存到 session中
 				sessionStorage.getItem("userMsg") && this.$store.replaceState(JSON.parse(sessionStorage.getItem("userMsg")));
 				window.addEventListener("beforeunload",()=>{
 				    sessionStorage.setItem("userMsg",JSON.stringify(this.$store.state))

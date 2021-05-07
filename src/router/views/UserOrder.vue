@@ -54,7 +54,7 @@
 				return this.$store.state.userId;
 			},
 			commentUpdate() {
-				if (this.userComment.id != 0) {
+				if (this.userComment.id != 0 && this.userComment.id!=null) {
 					return true;
 				} else
 					return false;
@@ -151,11 +151,7 @@
 			}
 		},
 		mounted() {
-			if (this.$store.state.userId != "") {
-				this.getUserOrder();
-			} else
-				alert("未登录");
-
+			this.getUserOrder();
 		}
 	}
 </script>

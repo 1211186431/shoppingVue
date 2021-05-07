@@ -1,70 +1,71 @@
 <template>
 	<div>
 		<div v-if="goodsDetail">
-			<div class="product">
+			<div class="product2">
 				<el-row :gutter="10">
 					<el-col :span="10">
 						<div class="img">
 							<img :src="this.PicHOST+goodsDetail.picture">
 						</div>
 					</el-col>
-
 					<el-col :span="14">
-						<div class="product-name">
-							<h1 class="name">{{goodsDetail.name}}</h1>
-						</div>
-					</el-col>
-
-					<el-col :span="14">
-						<div class="product-price">
-							<span style="font-size:15px ;color:  #717273;">售价 ￥</span>
-							<div class="price">{{goodsDetail.price}}</div>
-						</div>
-					</el-col>
-
-					<el-col :span="14">
-						<div class="product-inventory">
-							<span style="font-size:15px ;color:  #717273;">库存 :</span>
-							<div class="inventory">{{goodsDetail.inventory}}</div>
-						</div>
-					</el-col>
-
-					<el-col :span="14">
-						<div class="product-oldAndnew">
-							<span style="font-size:15px ;color:  #717273;">新旧程度 :</span>
-							<div class="oldAndnew">{{goodsDetail.oldAndnew}}</div>
-						</div>
-					</el-col>
-
-					<el-col :span="14">
-						<div class="product-bargain">
-							<span style="font-size:15px ;color:  #717273;">是否接受还价 :</span>
-							<div class="bargain">
-								<el-switch v-model="bargain"></el-switch>
+						<el-col :span="14">
+							<div class="product-name">
+								<h1 class="name">{{goodsDetail.name}}</h1>
 							</div>
-						</div>
-					</el-col>
+						</el-col>
 
-					<el-col :span="14">
-						<div class="product-delivery">
-							<span style="font-size:15px ;color:  #717273;">发货地 :</span>
-							<div class="delivery">{{goodsDetail.delivery}}</div>
-						</div>
-					</el-col>
+						<el-col :span="14">
+							<div class="product-price">
+								<span style="font-size:15px ;color:  #717273;">售价 ￥</span>
+								<div class="price">{{goodsDetail.price}}</div>
+							</div>
+						</el-col>
 
-					<el-col :span="14">
-						<div class="addCart">
-							<el-button type="primary" @click="addCart">加入购物车</el-button>
-						</div>
-						<div class="collection">
-							<el-button icon="el-icon-star-off">未收藏</el-button>
-						</div>
-					</el-col>
-					<el-col :span="14">
-						<div class="info">
-							{{goodsDetail.details}}
-						</div>
+						<el-col :span="14">
+							<div class="product-inventory">
+								<span style="font-size:15px ;color:  #717273;">库存 :</span>
+								<div class="inventory">{{goodsDetail.inventory}}</div>
+							</div>
+						</el-col>
 
+						<el-col :span="14">
+							<div class="product-oldAndnew">
+								<span style="font-size:15px ;color:  #717273;">新旧程度 :</span>
+								<div class="oldAndnew">{{goodsDetail.oldAndnew}}</div>
+							</div>
+						</el-col>
+
+						<el-col :span="14">
+							<div class="product-bargain">
+								<span style="font-size:15px ;color:  #717273;">是否接受还价 :</span>
+								<div class="bargain">
+									<el-switch v-model="bargain"></el-switch>
+								</div>
+							</div>
+						</el-col>
+
+						<el-col :span="14">
+							<div class="product-delivery">
+								<span style="font-size:15px ;color:  #717273;">发货地 :</span>
+								<div class="delivery">{{goodsDetail.delivery}}</div>
+							</div>
+						</el-col>
+
+						<el-col :span="14">
+							<div class="addCart">
+								<el-button type="primary" @click="addCart">加入购物车</el-button>
+							</div>
+							<div class="collection">
+								<el-button icon="el-icon-star-off">未收藏</el-button>
+							</div>
+						</el-col>
+						<el-col :span="14">
+							<div class="info">
+								{{goodsDetail.details}}
+							</div>
+
+						</el-col>
 					</el-col>
 				</el-row>
 
@@ -76,11 +77,11 @@
 <script>
 	export default {
 		components: {
-			
+
 		},
 		computed: {
 			goodsId() {
-				return this.$route.params.GoodsId;
+				return this.$route.params.goodsId;
 			},
 			bargain() {
 				if (this.goodsDetail.bargain == 0)
@@ -248,20 +249,21 @@
 	}
 
 	.img {
-		margin-left: 40px;
 		border: 2px solid #dddee1;
 		border-radius: 10px;
 		height: 500px;
-		width: 500px;
-
+		width: 100%;
+		vertical-align: middle;
 	}
 
 	.img img {
-		height: 100%;
-		width: 100%;
+		max-width: 100%;
+		max-height: 100%;
+		display: block;
+		margin: auto;
 	}
 
-	.product {
+	.product2 {
 		margin: 32px;
 		padding: 32px;
 		background: #fff;
