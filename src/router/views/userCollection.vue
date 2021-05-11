@@ -11,7 +11,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="90">
 				<template slot-scope="scope">
-					<el-button size="mini" @click.stop="deleteColl(scope.$index)" icon="el-icon-plus">
+					<el-button size="mini" @click.stop="deleteColl(scope.$index)" icon="el-icon-delete" type="danger">
 					</el-button>
 				</template>
 			</el-table-column>
@@ -21,20 +21,20 @@
 
 <script>
 	export default {
-		data(){
-			return{
-				collection:[]
+		data() {
+			return {
+				collection: []
 			}
 		},
 		computed: {
-			userId(){
+			userId() {
 				return this.$store.state.userId;
 			}
 		},
-		methods:{
+		methods: {
 			getCollection() {
 				var url = this.HOST + "/collection/get";
-				if(this.userId!=""){
+				if (this.userId != "") {
 					this.$axios({
 						method: "get",
 						url: url,
@@ -42,26 +42,26 @@
 							userId: this.userId
 						}
 					}).then(response => {
-						this.collection=response.data;
+						this.collection = response.data;
 					});
-				}
-				else{
+				} else {
 					alert("您还为登录");
 				}
-				
+
 			},
-			deleteColl(row){
+			deleteColl(row) {
 				var url = this.HOST + "/collection/delete";
-					this.$axios({
-						method: "post",
-						url: url,
-						params: {
-							collId:this.collection[row].id 
-						}
-					}).then(response => {
-						this.collection.splice(row,1);
-						alert("删除成功");
-					});
+				this.$axios({
+					method: "post",
+					url: url,
+					params: {
+						collId: this.collection[row].id
+					}
+				}).then(response => {
+					this.collection.splice(row, 1);
+					this.$store.commit('deleteUserCollection', this.collection[row].goods_id);
+					alert("删除成功");
+				});
 			}
 		},
 		mounted() {

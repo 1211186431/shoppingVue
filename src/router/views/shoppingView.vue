@@ -10,8 +10,9 @@
 		</el-row>
 
 		<el-row>
-			<div id>
-				<Product v-for="item in this.goodsList.data" :info="item" :key="item.id"></Product>
+			<div>
+				<Product v-for="item in this.goodsList.data" :info="item" :key="item.id">
+				</Product>
 			</div>
 		</el-row>
 		<el-row>
@@ -35,6 +36,9 @@
 		computed: {
 			userName() {
 				return this.$store.state.userName;
+			},
+			userId() {
+				return this.$store.state.userId;
 			}
 		},
 		data() {
@@ -69,7 +73,6 @@
 						pageNum: x
 					}
 				}).then(response => {
-					console.log(response.data);
 					this.goodsList = response.data;
 				});
 			},

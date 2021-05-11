@@ -126,6 +126,7 @@ const store = new Vuex.Store({
 		userId: "",
 		userName: "",
 		ShoppingCart: [],
+		UserCollection:[]
 	},
 	mutations: {
 		setUserId(state, userId) {
@@ -134,33 +135,106 @@ const store = new Vuex.Store({
 		setUserName(state, userName) {
 			state.userName = userName;
 		},
+		setCart(state,cart){
+			state.ShoppingCart=cart;
+		},
 		// 添加到购物车
-		addCart(state, id) {
-			// 先判断购物车是否已有，如果有，数量+1
-			const isAdded = state.ShoppingCart.find(item => item.id === id);
-			if (isAdded) {
-				isAdded.count++;
-			} else {
-				state.ShoppingCart.push({
-					id: id,
-					count: 1
-				})
-			}
+		addCart(state, s) {
+			state.ShoppingCart.push(s);
 		},
 		// 修改商品数量
-		editCartCount(state, payload) {
-			const product = state.ShoppingCart.find(item => item.id === payload.id);
-			product.count += payload.count;
+		editCartCount(state, s) {
+			state.ShoppingCart.forEach(function(cart){
+                if(cart.id==s.id){
+					cart=s;
+				}
+			})
 		},
 		// 删除商品
-		deleteCart(state, id) {
-			const index = state.ShoppingCart.findIndex(item => item.id === id);
+		deleteCart(state, cartId) {
+			const index = state.ShoppingCart.findIndex(item => item.id === cartId);
+			console.log(index);
 			state.ShoppingCart.splice(index, 1);
 		},
 		// 清空购物车
 		emptyCart(state) {
 			state.ShoppingCart = [];
+		},
+        addUserCollection(state,id){
+			state.UserCollection.push(id);
+		},
+		deleteUserCollection(state,id){
+			var g= parseInt(id);
+			const i = state.UserCollection.find(item => item.goodsId === g);
+			state.UserCollection.splice(i, 1);
 		}
+	},
+	actions:{
+		addUserCart(context,s){
+			const isAdded = store.state.ShoppingCart.find(item => item.goodsId === s.goodsId);
+			if(isAdded){
+				isAdded.goodsNum+=1;
+				context.dispatch('editCart',isAdded);
+			}
+			else{
+				var url1 ="/api/cart/insertCart";
+				axios({
+					method: "post",
+					url: url1,
+					data:s
+				}).then(response => {
+					s.id=response.data;
+				    context.commit("addCart",s);
+				});
+			}
+		},
+		getUserCart(context){
+			var url1 ="/api/cart/getCart";
+			axios({
+				method: "get",
+				url: url1,
+				params: {
+					userId: store.state.userId
+				}
+			}).then(response => {
+			    context.commit("setCart",response.data);
+			});
+		},
+		editCart(context,s){
+			var url1 ="/api/cart/updateCart";
+			axios({
+				method: "post",
+				url: url1,
+				data:s
+			}).then(response => {
+			    context.commit("editCartCount",s);
+			});
+		},
+		deleteGoods(context,id){
+			var url1 ="/api/cart/deleteCart";
+			axios({
+				method: "post",
+				url: url1,
+				params:{
+					cartId:id
+				}
+			}).then(response => {
+			    context.commit("deleteCart",id);
+			});
+		},
+		deleteAllGoods(context,userId){
+			var url1 ="/api/cart/deleteAllCart";
+			axios({
+				method: "post",
+				url: url1,
+				params:{
+					userId:userId
+				}
+			}).then(response => {
+			    context.commit("emptyCart");
+			});
+		}
+		
 	}
 
 });

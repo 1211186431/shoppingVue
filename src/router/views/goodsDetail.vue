@@ -57,7 +57,10 @@
 								<el-button type="primary" @click="addCart">加入购物车</el-button>
 							</div>
 							<div class="collection">
-								<el-button icon="el-icon-star-off">未收藏</el-button>
+								<el-button icon="el-icon-star-off" @click="addCollection()" v-show="isColl<0">加入收藏
+								</el-button>
+								<el-button icon="el-icon-star-on" @click="deleteCollection()" v-show="isColl>0">已收藏
+								</el-button>
 							</div>
 						</el-col>
 						<el-col :span="14">
@@ -68,7 +71,6 @@
 						</el-col>
 					</el-col>
 				</el-row>
-
 			</div>
 		</div>
 	</div>
@@ -88,6 +90,20 @@
 					return false;
 				else
 					return true;
+			},
+			UserCollection() {
+				return this.$store.state.UserCollection;
+			},
+			isColl() {
+				var g = parseInt(this.goodsId); //通过url传过来的是字符串
+				const i = this.UserCollection.find(item => item.goodsId === g);
+				if (i != null)
+					return i.id;
+				else
+					return -1;
+			},
+			userId(){
+				return this.$store.state.userId;
 			}
 		},
 		data() {
@@ -122,8 +138,13 @@
 				});
 			},
 			addCart() {
-				var goods = this.goodsId;
-				this.$store.commit('addCart', goods);
+				var s = {
+					"id": 0,
+					"userId": this.userId,
+					"goodsId": this.goodsId,
+					"goodsNum": 1
+				}
+				this.$store.dispatch('addUserCart',s);
 				alert("加入成功");
 				this.$router.push('/shoppingView');
 			},
@@ -138,16 +159,30 @@
 							goodsId: this.goodsId
 						}
 					}).then(response => {
-						var msg = response.data;
-						if (msg == 1) {
-							alert("收藏成功");
-						} else {
-							alert("不能重复收藏");
-						}
+						response.data;
+						var usercoll = {
+							id: response.data,
+							goodsId: parseInt(this.goodsId)
+						};
+						alert("收藏成功");
+						this.$store.commit('addUserCollection', usercoll);
 					});
 				} else {
 					alert("您还未登录")
 				}
+			},
+			deleteCollection() {
+				var url = this.HOST + "/collection/delete";
+				this.$axios({
+					method: "post",
+					url: url,
+					params: {
+						collId: this.isColl
+					}
+				}).then(response => {
+					alert("删除成功");
+					this.$store.commit('deleteUserCollection', this.goodsId);
+				});
 			}
 
 		},

@@ -1,5 +1,5 @@
 <template>
-	<div class="product">
+	<div class="product" v-if="!this.isSeller()">
 		<router-link :to="'/goodsDetail/' + info.id" class="product-main">
 			<img :src="this.PicHOST + info.picture" style="height:150px;">
 			<div class="product-cost">¥ {{ info.price }}</div>
@@ -10,20 +10,47 @@
 </template>
 <script>
 	export default {
+		computed: {
+			userId() {
+				return this.$store.state.userId;
+			}
+		},
 		props: {
 			info: Object
 		},
 		data() {
 			return {
-
+				goodsDetail: {}
 			}
 		},
 		methods: {
-			addCart() {
-				var goods = this.info.id;
-				this.$store.commit('addCart', goods);
-				alert("加入成功");
+			addCart() {  
+				if (this.userId != "" ) {
+					var s = {
+						"id": 0,
+						"userId": this.userId,
+						"goodsId": this.info.id,
+						"goodsNum": 1
+					}
+					var cart = this.$store.ShoppingCart.find(item => item.goodsId === this.info.id);
+					//不让它重复加入了
+					if (cart == null) {
+						this.$store.dispatch('addUserCart', s);
+						alert("加入成功");
+					} 
+					else
+						alert("购物车中已拥有");
+
+				} else
+					alert("未登录");
+			},
+			isSeller() {
+				if (this.userId == this.info.user_id)
+					return true;
+				else
+					return false;
 			}
+
 		}
 	};
 </script>

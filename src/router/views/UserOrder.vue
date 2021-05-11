@@ -29,6 +29,8 @@
 			</el-table-column>
 			<el-table-column prop="goodsNum" label="数量" width="180">
 			</el-table-column>
+			<el-table-column prop="state" label="状态" width="180">
+			</el-table-column>
 		</el-table>
 
 		<div v-if="userComment.goodsId">
@@ -89,6 +91,7 @@
 			},
 			handleCurrentChange(val) {
 				this.OrderGoods = val.goodsList;
+				console.log(val);
 				this.orderNumber = val.orderNumber;
 				this.userComment.goodsId = 0;
 			},

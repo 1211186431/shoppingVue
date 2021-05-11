@@ -35,8 +35,8 @@
 				<br>
 			</div>
 		</div>
-		
-       <p>收货地址：{{currentRow}}</p>
+
+		<p>收货地址：{{currentRow}}</p>
 		<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
 			@current-change="handleCurrentChange">
 			<el-table-column prop="address" label="地址" width="180">
@@ -56,16 +56,21 @@
 			},
 			goodsCartDetail() {
 				var g = [];
-				for (var i = 0; i < this.goodsCart.length; i++) {
+				for (var i = 0; i < this.goodsDetail.length; i++) {
 					if (this.goodsDetail[i] != null) {
-						var gd = {
-							id: this.goodsCart[i].id,
-							price: this.goodsDetail[i].price,
-							name: this.goodsDetail[i].name,
-							picture: this.goodsDetail[i].picture,
-							count: this.goodsCart[i].count
+                       const cart=this.goodsCart.find(item => item.goodsId ===  this.goodsDetail[i].id);
+						if(cart!=null){
+							var gd = {
+								id: this.goodsDetail[i].id,
+								price: this.goodsDetail[i].price,
+								name: this.goodsDetail[i].name,
+								picture: this.goodsDetail[i].picture,
+								inventory:this.goodsDetail[i].inventory,
+								count: cart.goodsNum,
+								cartId:cart.id
+							}
+							g.push(gd);
 						}
-						g.push(gd);
 					}
 				}
 				return g;
@@ -73,7 +78,7 @@
 			countAll() {
 				let count = 0;
 				this.goodsCart.forEach(item => {
-					count += item.count;
+					count += item.goodsNum;
 				});
 				return count;
 			},
@@ -97,7 +102,7 @@
 					"receiver": null,
 					"payment": "1111",
 					"state": 1,
-					"purchasingDate":"",
+					"purchasingDate": "",
 					"goodsList": []
 				},
 				OrderDetail: {},
@@ -131,17 +136,18 @@
 				});
 			},
 			buy() {
-				if (this.UserOrder.receiver != null) {
-					this.UserOrder.purchasingDate=new Date();
-					var goodsList = this.$store.state.ShoppingCart
+				var goodsList = this.$store.state.ShoppingCart
+				if (this.UserOrder.receiver != null && goodsList != null) {
+					this.UserOrder.purchasingDate = new Date();
 					for (var i = 0; i < goodsList.length; i++) {
 						var g = {
-							"goodsId": goodsList[i].id,
-							"goodsNum": goodsList[i].count
+							"goodsId": goodsList[i].goodsId,
+							"goodsNum": goodsList[i].goodsNum
 						}
 						this.UserOrder.goodsList.push(g);
 					}
 					this.UserOrder.allprice = this.costAll;
+					console.log(this.UserOrder);
 					var url = this.HOST + "/Order/set";
 					this.$axios({
 						method: "post",
@@ -149,27 +155,27 @@
 						data: this.UserOrder
 					}).then(response => {
 						this.OrderDetail = response.data;
-						this.$store.commit('emptyCart');
+						this.$store.dispatch('deleteAllGoods',this.$store.state.userId);
 						alert("购买成功");
-
 					}).catch(e => {
 						alert("订单错误");
 					});
 				} else
-					alert("未选择地址");
+					alert("订单错误");
 
 			},
 			deleteGoods(row) {
-				if (this.goodsCartDetail[row] != null)
-					this.$store.commit('deleteCart', this.goodsCartDetail[row].id);
+				if (this.goodsCartDetail[row] != null){
+					this.$store.dispatch('deleteGoods', this.goodsCartDetail[row].cartId);
+				}	
 			},
-			editGoods(row, num) { //编辑方法放vuex那边写了
+			editGoods(row, num) { 
 				if (this.goodsCartDetail[row] != null) {
-					if (num < 0 && this.goodsCartDetail[row].count === 1) return;
-					this.$store.commit('editCartCount', {
-						id: this.goodsCartDetail[row].id,
-						count: num
-					});
+					var n=this.goodsCartDetail[row].count+num;
+					if ((num < 0 && this.goodsCartDetail[row].count === 1) || n>this.goodsCartDetail[row].inventory) return;
+					var newCart=this.goodsCart.find(item => item.id === this.goodsCartDetail[row].cartId)
+					newCart.goodsNum+=num;
+					this.$store.dispatch('editCart',newCart);
 				}
 			},
 			handleCurrentChange(val) {
@@ -193,10 +199,21 @@
 		mounted() {
 			if (this.goodsCart.length > 0) {
 				for (var i = 0; i < this.goodsCart.length; i++) {
-					this.getGoodsDetail(this.goodsCart[i].id)
+					this.getGoodsDetail(this.goodsCart[i].goodsId)
 				}
 			}
 			this.getUserAddress();
+
+		},
+		watch:{
+			goodsCart(){
+				// if (this.goodsCart.length > 0) {
+				// 	for (var i = 0; i < this.goodsCart.length; i++) {
+				// 		this.getGoodsDetail(this.goodsCart[i].goodsId)
+				// 	}
+				// }
+				//console.log("1111");
+			}
 		}
 	}
 </script>

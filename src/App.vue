@@ -74,7 +74,6 @@
 						sessionStorage.clear();
 						this.$router.push('/login');
 				  });
-				  
 			  }
 			  
 		},

@@ -102,7 +102,7 @@
 					data:this.goodsDetail
 				 }).then(response => {
 					 this.u.goodsId=response.data;
-				 	 //this.$refs.upload.submit();
+				 	 this.$refs.upload.submit();
 				 });
 			},
 			onUpload(response, file, fileList) { //成功上传

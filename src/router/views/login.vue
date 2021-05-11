@@ -79,11 +79,32 @@
 						this.$store.commit('setUserId', this.userId);
 						this.$store.commit('setUserName', this.userName);
 						sessionStorage.setItem("userMsg",JSON.stringify(this.$store.state));
+						this.setUserColl();
+						this.$store.dispatch('getUserCart');
 						this.$router.push('/shopping');
 					} else if (this.myResponse.status == 401) {
 						alert(this.myResponse.msg);
 					}
 				});
+			},
+			setUserColl(){
+				var url = this.HOST + "/collection/get";
+				this.$axios({
+					method: "get",
+					url: url,
+					params: {
+						userId: this.userId
+					}
+				}).then(response => {
+				    for(var  i=0;i<response.data.length;i++){
+						var usercoll={
+							id:response.data[i].id,
+							goodsId:response.data[i].goods_id
+						};
+						this.$store.commit('addUserCollection',usercoll);
+					}
+				});
+				
 			}
 		},
 
