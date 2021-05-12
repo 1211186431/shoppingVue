@@ -18,7 +18,12 @@
 			<el-form-item label="手机号码" label-width="80px" prop="phone">
 				<el-input class="item" v-model="form.phone" placeholder="请输入电话号码" clearable></el-input>
 			</el-form-item>
-
+			<el-form-item label="验证码" label-width="80px">
+				<img :src="this.HOST+'/getVerifiCode'" v-if="ImageCode" />
+				<el-button @click="refashImage()">换一张</el-button>
+				<el-input class="item" v-model="iCode" placeholder="验证码" clearable></el-input>
+				<el-button @click="codeChecking()">验证</el-button>
+			</el-form-item>
 
 			<el-form-item style="text-align: center;">
 				<el-button type="primary" @click="register('form')" icon="el-icon-upload">注册</el-button>
@@ -27,6 +32,7 @@
 			</el-form-item>
 			<router-link to="login">已有账号？登录</router-link>
 		</el-form>
+
 	</div>
 </template>
 <script>
@@ -53,6 +59,8 @@
 
 
 			return {
+				iCode:"",
+				ImageCode: true,
 				form: {
 					sex: "",
 					name: '',
@@ -136,6 +144,12 @@
 			};
 		},
 		methods: {
+			refashImage() {
+				this.ImageCode = false;
+				this.$nextTick(() => {
+					this.ImageCode = true
+				})
+			},
 			register(formName) {
 				this.$refs[formName].validate(valid => {
 					if (valid) {
@@ -171,6 +185,18 @@
 					} else if (this.myResponse.state == 0) {
 						alert(this.myResponse.msg);
 					}
+				});
+			},
+			codeChecking(){
+				var url = this.HOST + "/checkCode";
+				this.$axios({
+					method: "get",
+					url: url,
+					params: {
+						imageCode:this.iCode
+					}
+				}).then(response => {
+					alert(response.data.msg);
 				});
 			}
 

@@ -32,7 +32,7 @@
 						"goodsId": this.info.id,
 						"goodsNum": 1
 					}
-					var cart = this.$store.ShoppingCart.find(item => item.goodsId === this.info.id);
+					var cart = this.$store.state.ShoppingCart.find(item => item.goodsId === this.info.id);
 					//不让它重复加入了
 					if (cart == null) {
 						this.$store.dispatch('addUserCart', s);

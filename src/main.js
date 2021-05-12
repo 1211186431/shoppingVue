@@ -6,12 +6,12 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs"
 import VueRouter from 'vue-router'
 Vue.prototype.$axios = axios;
-
 Vue.prototype.HOST = "/api";
 Vue.prototype.PicHOST = "http://localhost:8081";
-
+const mainHost="/api";
 // Vue.prototype.HOST = "http://47.94.16.59:8081";
 // Vue.prototype.PicHOST = "http://47.94.16.59:8081";
+//const mainHost="http://47.94.16.59:8081";
 
 import 'element-ui/lib/theme-chalk/index.css';
 import Vuex from "vuex";
@@ -153,7 +153,6 @@ const store = new Vuex.Store({
 		// 删除商品
 		deleteCart(state, cartId) {
 			const index = state.ShoppingCart.findIndex(item => item.id === cartId);
-			console.log(index);
 			state.ShoppingCart.splice(index, 1);
 		},
 		// 清空购物车
@@ -177,7 +176,7 @@ const store = new Vuex.Store({
 				context.dispatch('editCart',isAdded);
 			}
 			else{
-				var url1 ="/api/cart/insertCart";
+				var url1 =mainHost+"/cart/insertCart";
 				axios({
 					method: "post",
 					url: url1,
@@ -189,7 +188,7 @@ const store = new Vuex.Store({
 			}
 		},
 		getUserCart(context){
-			var url1 ="/api/cart/getCart";
+			var url1 =mainHost+"/cart/getCart";
 			axios({
 				method: "get",
 				url: url1,
@@ -201,7 +200,7 @@ const store = new Vuex.Store({
 			});
 		},
 		editCart(context,s){
-			var url1 ="/api/cart/updateCart";
+			var url1 =mainHost+"/cart/updateCart";
 			axios({
 				method: "post",
 				url: url1,
@@ -211,7 +210,7 @@ const store = new Vuex.Store({
 			});
 		},
 		deleteGoods(context,id){
-			var url1 ="/api/cart/deleteCart";
+			var url1 =mainHost+"/cart/deleteCart";
 			axios({
 				method: "post",
 				url: url1,
@@ -223,7 +222,7 @@ const store = new Vuex.Store({
 			});
 		},
 		deleteAllGoods(context,userId){
-			var url1 ="/api/cart/deleteAllCart";
+			var url1 =mainHost+"/cart/deleteAllCart";
 			axios({
 				method: "post",
 				url: url1,
