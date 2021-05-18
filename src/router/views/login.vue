@@ -73,16 +73,16 @@
 					}
 				}).then(response => {
 					this.myResponse = response.data;
-					if (this.myResponse.status == 200) {
-						this.userId = this.myResponse.msg.id;
-						this.userName = this.myResponse.msg.name;
+					if (this.myResponse.code == 200) {
+						this.userId = this.myResponse.data.id;
+						this.userName = this.myResponse.data.name;
 						this.$store.commit('setUserId', this.userId);
 						this.$store.commit('setUserName', this.userName);
 						sessionStorage.setItem("userMsg",JSON.stringify(this.$store.state));
 						this.setUserColl();
 						this.$store.dispatch('getUserCart');
 						this.$router.push('/shopping');
-					} else if (this.myResponse.status == 401) {
+					} else if (this.myResponse.code == 401) {
 						alert(this.myResponse.msg);
 					}
 				});

@@ -1,30 +1,29 @@
 <template>
 	<div>
-		<div>
-			<p>用户列表</p>
-			<el-table :data="users" highlight-current-row @current-change="handleCurrentChange">
-				<el-table-column prop="name" label="用户名"></el-table-column>
-			</el-table>
-		</div>
-		<MyChat v-if="to.length>0 && userName.length>0" :toUser="to"></MyChat>
+			<MyChat :toUser="to"></MyChat>
 	</div>
 </template>
 
 <script>
 	import MyChat from '../../components/MyChat.vue'
 	export default {
-		components:{
+		props: ['dialogTableVisible'],
+		components: {
 			MyChat
 		},
 		computed: {
 			userName() {
 				return this.$store.state.userName;
+			},
+			d() {
+				return this.dialogTableVisible
 			}
+
 		},
 		data() {
 			return {
-				users: [],
-				to:""
+				users: this.$store.state.talkList,
+				to: "",
 			}
 		},
 		methods: {
@@ -37,13 +36,13 @@
 				}).then(response => {
 					this.users = response.data
 				});
-			},
-			handleCurrentChange(val) {
-				this.to = val.name;
 			}
 		},
+		created() {
+			console.log("createSock");
+		},
 		mounted() {
-			this.getUser();
+			//this.getUser();
 		}
 	}
 </script>

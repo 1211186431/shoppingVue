@@ -179,10 +179,10 @@
 					}
 				}).then(response => {
 					this.myResponse = response.data;
-					if (this.myResponse.state == 1) {
+					if (this.myResponse.code == 200) {
 						alert(this.myResponse.msg);
 						this.$router.push('/login');
-					} else if (this.myResponse.state == 0) {
+					} else if (this.myResponse.code == 0) {
 						alert(this.myResponse.msg);
 					}
 				});

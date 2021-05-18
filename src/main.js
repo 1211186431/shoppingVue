@@ -6,24 +6,26 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs"
 import VueRouter from 'vue-router'
 Vue.prototype.$axios = axios;
+
 Vue.prototype.HOST = "/api";
 Vue.prototype.PicHOST = "http://localhost:8081";
-const mainHost="/api";
+const mainHost = "/api";
 // Vue.prototype.HOST = "http://47.94.16.59:8081";
 // Vue.prototype.PicHOST = "http://47.94.16.59:8081";
-//const mainHost="http://47.94.16.59:8081";
+// const mainHost="http://47.94.16.59:8081";
 
 import 'element-ui/lib/theme-chalk/index.css';
 import Vuex from "vuex";
+import WebSocket from './router/views/WebSocket.vue';
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
 
 const originalPush = VueRouter.prototype.push
- 
+
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+	return originalPush.call(this, location).catch(err => err)
 }
 
 
@@ -42,7 +44,8 @@ const routers = [{
 	},
 	{
 		path: '/chat',
-		component: (resolve) => require(['./router/views/WebSocket.vue'], resolve)
+		//component: (resolve) => require(['./router/views/WebSocket.vue'], resolve)
+		component: WebSocket
 	},
 	{
 		path: '/register',
@@ -113,12 +116,12 @@ router1.beforeEach((to, from, next) => {
 });
 /** 捕获到错误重新加载路由 */
 router1.onError((error) => {
-    const pattern = /Loading chunk (\d)+ failed/g;
-    const isChunkLoadFailed = error.message.match(pattern);
-    const targetPath = router1.history.pending.fullPath;
-    if (isChunkLoadFailed) {
-        router1.replace(targetPath);
-    }
+	const pattern = /Loading chunk (\d)+ failed/g;
+	const isChunkLoadFailed = error.message.match(pattern);
+	const targetPath = router1.history.pending.fullPath;
+	if (isChunkLoadFailed) {
+		router1.replace(targetPath);
+	}
 });
 
 const store = new Vuex.Store({
@@ -126,7 +129,8 @@ const store = new Vuex.Store({
 		userId: "",
 		userName: "",
 		ShoppingCart: [],
-		UserCollection:[]
+		UserCollection: [],
+		talkList: []
 	},
 	mutations: {
 		setUserId(state, userId) {
@@ -135,8 +139,16 @@ const store = new Vuex.Store({
 		setUserName(state, userName) {
 			state.userName = userName;
 		},
-		setCart(state,cart){
-			state.ShoppingCart=cart;
+		setCart(state, cart) {
+			for (var i = 0; i < cart.length; i++) {
+				var c = {
+					"id": cart[i].id,
+					"userId": cart[i].userId,
+					"goodsId": cart[i].goodsId,
+					"goodsNum": cart[i].goodsNum
+				};
+				state.ShoppingCart.push(c);
+			}
 		},
 		// 添加到购物车
 		addCart(state, s) {
@@ -144,9 +156,9 @@ const store = new Vuex.Store({
 		},
 		// 修改商品数量
 		editCartCount(state, s) {
-			state.ShoppingCart.forEach(function(cart){
-                if(cart.id==s.id){
-					cart=s;
+			state.ShoppingCart.forEach(function(cart) {
+				if (cart.id == s.id) {
+					cart = s;
 				}
 			})
 		},
@@ -159,36 +171,52 @@ const store = new Vuex.Store({
 		emptyCart(state) {
 			state.ShoppingCart = [];
 		},
-        addUserCollection(state,id){
+		addUserCollection(state, id) {
 			state.UserCollection.push(id);
 		},
-		deleteUserCollection(state,id){
-			var g= parseInt(id);
+		deleteUserCollection(state, id) {
+			var g = parseInt(id);
 			const i = state.UserCollection.find(item => item.goodsId === g);
 			state.UserCollection.splice(i, 1);
-		}
-	},
-	actions:{
-		addUserCart(context,s){
-			const isAdded = store.state.ShoppingCart.find(item => item.goodsId === s.goodsId);
-			if(isAdded){
-				isAdded.goodsNum+=1;
-				context.dispatch('editCart',isAdded);
-			}
-			else{
-				var url1 =mainHost+"/cart/insertCart";
-				axios({
-					method: "post",
-					url: url1,
-					data:s
-				}).then(response => {
-					s.id=response.data;
-				    context.commit("addCart",s);
-				});
+		},
+		addTalkList(state, userName) {
+			const index = state.talkList.findIndex(item => item.userName === userName);
+			if (index >= 0)
+				state.talkList[index].isTalk = true;
+			else {
+				var talk = {
+					userName: userName,
+					isTalk: true
+				}
+				state.talkList.push(talk);
 			}
 		},
-		getUserCart(context){
-			var url1 =mainHost+"/cart/getCart";
+		setTalkList(state, userName) {
+			const index = state.talkList.findIndex(item => item.userName === userName);
+			if (index >= 0)
+				state.talkList[index].isTalk = false;
+		}
+	},
+	actions: {
+		addUserCart(context, s) {
+			// const isAdded = store.state.ShoppingCart.find(item => item.goodsId === s.goodsId);
+			// if (isAdded) {
+			// 	isAdded.goodsNum += 1;
+			// 	context.dispatch('editCart', isAdded);
+			// } else {
+			var url1 = mainHost + "/cart/insertCart";
+			axios({
+				method: "post",
+				url: url1,
+				data: s
+			}).then(response => {
+				s.id = response.data;
+				context.commit("addCart", s);
+			});
+			//}
+		},
+		getUserCart(context) {
+			var url1 = mainHost + "/cart/getCart";
 			axios({
 				method: "get",
 				url: url1,
@@ -196,44 +224,45 @@ const store = new Vuex.Store({
 					userId: store.state.userId
 				}
 			}).then(response => {
-			    context.commit("setCart",response.data);
+				console.log(response.data);
+				context.commit("setCart", response.data);
 			});
 		},
-		editCart(context,s){
-			var url1 =mainHost+"/cart/updateCart";
+		editCart(context, s) {
+			var url1 = mainHost + "/cart/updateCart";
 			axios({
 				method: "post",
 				url: url1,
-				data:s
+				data: s
 			}).then(response => {
-			    context.commit("editCartCount",s);
+				context.commit("editCartCount", s);
 			});
 		},
-		deleteGoods(context,id){
-			var url1 =mainHost+"/cart/deleteCart";
+		deleteGoods(context, id) {
+			var url1 = mainHost + "/cart/deleteCart";
 			axios({
 				method: "post",
 				url: url1,
-				params:{
-					cartId:id
+				params: {
+					cartId: id
 				}
 			}).then(response => {
-			    context.commit("deleteCart",id);
+				context.commit("deleteCart", id);
 			});
 		},
-		deleteAllGoods(context,userId){
-			var url1 =mainHost+"/cart/deleteAllCart";
+		deleteAllGoods(context, userId) {
+			var url1 = mainHost + "/cart/deleteAllCart";
 			axios({
 				method: "post",
 				url: url1,
-				params:{
-					userId:userId
+				params: {
+					userId: userId
 				}
 			}).then(response => {
-			    context.commit("emptyCart");
+				context.commit("emptyCart");
 			});
 		}
-		
+
 	}
 
 });

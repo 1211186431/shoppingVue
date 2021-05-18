@@ -1,18 +1,43 @@
 <template>
 	<div>
-			<el-card class="box-card" style="width: 700px;">
-				<div slot="header" class="clearfix">
-					<span>与{{to}}聊天</span>
-				</div>
-				<div style="height: 200px;overflow:auto" ref="chatContent">
-					<Chat v-for="item in this.getMessage" :UserMessage="item" :isleft="isleft(item)" :key="item.chatId">
-					</Chat>
-				</div>
-				<div>
-					<el-input style="width: 500px;" v-model="content"></el-input>
-					<el-button icon="el-icon-s-promotion" type="primary" @click="sendName()">发送</el-button>
-				</div>
-			</el-card>
+		<el-card class="box-card" style="width: 700px;">
+			<div slot="header" class="clearfix">
+				<span>与{{to}}聊天中</span>
+			</div>
+			<div>
+				<el-row>
+					<el-col :span="4">
+						<div v-if="users.length>0">
+							<el-menu @select="handleSelect">
+								<el-menu-item v-for="item in this.users" :key="item.userName" :index="item.userName">
+									<el-badge :is-dot="item.isTalk" v-show="true">
+										{{item.userName}}
+									</el-badge>
+								</el-menu-item>
+							</el-menu>
+						</div>
+						<div v-if="users.length==0">
+							<span>暂无联系</span>
+						</div>
+						<el-button>清空</el-button>
+					</el-col>
+					<el-col :span="20">
+						<div>
+							<div style="height: 200px;overflow:auto" ref="chatContent">
+								<Chat v-for="item in this.getMessage" :UserMessage="item" :isleft="isleft(item)"
+									:key="item.chatId">
+								</Chat>
+							</div>
+							<div>
+								<el-input style="width: 450px;" v-model="content"></el-input>
+								<el-button icon="el-icon-s-promotion" type="primary" @click="sendName()">发送</el-button>
+							</div>
+						</div>
+					</el-col>
+				</el-row>
+			</div>
+
+		</el-card>
 
 	</div>
 </template>
@@ -22,7 +47,7 @@
 	import Stomp from 'stompjs';
 	import Chat from './Chat2.vue'
 	export default {
-		props:['toUser'],
+		props: ['toUser'],
 		components: {
 			Chat
 		},
@@ -30,8 +55,8 @@
 			userName() {
 				return this.$store.state.userName;
 			},
-			to(){
-				return this.toUser;
+			users(){
+				return this.$store.state.talkList;
 			}
 		},
 		data() {
@@ -40,7 +65,8 @@
 				content: "",
 				greeting: "",
 				stompClient: null,
-				getMessage: []
+				getMessage: [],
+				to: this.toUser
 			}
 		},
 		methods: {
@@ -54,22 +80,27 @@
 					});
 				})
 			},
-			getUserChat(){
+			getUserChat() {
 				var that = this;
 				var url = this.HOST + "/userChat/getUserChat";
 				that.$axios({
 					method: "get",
 					url: url,
-					params:{
-						"fromUser":this.userName,
-						"toUser":this.to
+					params: {
+						"fromUser": this.userName,
+						"toUser": this.to
 					}
 				}).then(response => {
 					this.getMessage = response.data
+					this.goDown();
 				});
 			},
 			showGreeting(message) {
-				this.getMessage.push(message);
+				if (message.fromUser == this.to)
+					this.getMessage.push(message);
+				else {
+					this.$store.commit('addTalkList', message.fromUser);
+				}
 			},
 			goDown() {
 				this.$nextTick(() => { //https://blog.csdn.net/qq_40557812/article/details/85051011
@@ -80,15 +111,15 @@
 				this.stompClient.send("/app/chat", {},
 					JSON.stringify({
 						'toUser': this.to,
-			            "userContent": this.content
+						"userContent": this.content
 					}));
-					var d=new Date();
+				var d = new Date();
 				var m = {
-						"fromUser": this.userName,
-						"userContent": this.content,
-						"crateDate":d,
-						"chatId":null,
-						"toUser":this.to
+					"fromUser": this.userName,
+					"userContent": this.content,
+					"crateDate": d,
+					"chatId": null,
+					"toUser": this.to
 				}
 				this.getMessage.push(m);
 				this.goDown();
@@ -98,16 +129,32 @@
 					return "left";
 				else
 					return "right";
+			},
+			handleSelect(key, keyPath) {
+				this.to = key;
+				this.$store.commit('setTalkList', key);
 			}
 		},
 		watch: {
-			to(newVal, oldVal) {
+			to(old, newval) {
 				this.getUserChat();
-			}		
+			}
 		},
 		mounted() {
 			this.connect();
-			this.getUserChat();
+			if (this.to != null)
+				this.getUserChat();
+		},
+		beforeCreate() {
+			console.log("1111")
+		},
+		created() {
+			console.log("createChat");
+		},
+		beforeDestroy() {
+			if (this.stompClient != null) {
+				this.stompClient.disconnect();
+			}
 		}
 	}
 </script>
@@ -133,5 +180,10 @@
 
 	.box-card {
 		width: 800px;
+	}
+
+	.item2 {
+		margin-top: 10px;
+		margin-right: 40px;
 	}
 </style>

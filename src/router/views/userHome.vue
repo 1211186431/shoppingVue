@@ -38,6 +38,9 @@
 			    <el-form-item label="电话号码">
 			      <el-input v-model="form.phone" ></el-input>
 			    </el-form-item>
+				<el-form-item label="电话号码">
+				  <el-input v-model="form.receiver" ></el-input>
+				</el-form-item>
 			  </el-form>
 			  <div slot="footer" class="dialog-footer">
 			    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -50,6 +53,8 @@
 			<el-table-column prop="address" label="地址" width="180">
 			</el-table-column>
 			<el-table-column prop="phone" label="电话" width="180">
+			</el-table-column>
+			<el-table-column prop="receiver" label="收货人" width="180">
 			</el-table-column>
 		</el-table>
 	</div>
@@ -75,6 +80,7 @@
 				form:{
 					"id":0,
 					"userId":this.userId,
+					"receiver":"张三",
 					"address":"北京市大兴区",
 					"phone":"13260104993"
 				}
@@ -127,7 +133,8 @@
 					params: {
 						userId: this.$store.state.userId,
 						address: this.form.address,
-						phone: this.form.phone
+						phone: this.form.phone,
+						receiver:this.form.receiver
 					}
 				}).then(response => {
 					this.dialogTableVisible =false;

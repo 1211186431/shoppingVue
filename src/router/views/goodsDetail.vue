@@ -73,13 +73,15 @@
 				</el-row>
 			</div>
 		</div>
+		<contactUser :goodsId="goodsId"></contactUser>
 	</div>
 </template>
 
 <script>
+	import contactUser from '../../components/contactUser.vue'
 	export default {
 		components: {
-
+           contactUser
 		},
 		computed: {
 			goodsId() {
@@ -108,20 +110,8 @@
 		},
 		data() {
 			return {
-				goodsDetail: {
-					"id": "",
-					"user_id": "",
-					"inventory": "",
-					"oldAndnew": "",
-					"state": "",
-					"details": "",
-					"onsaleDate": "",
-					"bargain": 0,
-					"price": "",
-					"name": "",
-					"picture": "",
-					"delivery": ""
-				}
+				goodsDetail: {},
+				sellerDetil:null
 			}
 		},
 		methods: {
@@ -144,9 +134,14 @@
 					"goodsId": this.goodsId,
 					"goodsNum": 1
 				}
-				this.$store.dispatch('addUserCart',s);
-				alert("加入成功");
-				this.$router.push('/shoppingView');
+				var cart = this.$store.state.ShoppingCart.find(item => item.goodsId === this.goodsId);
+				//不让它重复加入了
+				if (cart == null) {
+					this.$store.dispatch('addUserCart', s);
+					alert("加入成功");
+				} 
+				else
+					alert("购物车中已拥有");
 			},
 			addCollection() {
 				if (this.$store.state.userId != "") {
@@ -184,7 +179,6 @@
 					this.$store.commit('deleteUserCollection', this.goodsId);
 				});
 			}
-
 		},
 		mounted() {
 			this.getGoodsDetail(this.goodsId);
