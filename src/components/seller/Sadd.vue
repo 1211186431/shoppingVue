@@ -1,26 +1,26 @@
 <template>
 	<div>
 		<el-form :model="goodsDetail">
-			<el-form-item label="名字">
-				<el-input tyle="width:200px" v-model="goodsDetail.name"></el-input>
+			<el-form-item label="名字:">
+				<el-input style="width:200px" v-model="goodsDetail.name"></el-input>
 			</el-form-item>
-			<el-form-item label="价格">
-				<el-input tyle="width:200px" v-model="goodsDetail.price"></el-input>
+			<el-form-item label="价格:">
+				<el-input style="width:200px" v-model="goodsDetail.price"></el-input>
 			</el-form-item>
-			<el-form-item label="库存">
-				<el-input tyle="width:200px" v-model="goodsDetail.inventory"></el-input>
+			<el-form-item label="库存:">
+				<el-input style="width:200px" v-model="goodsDetail.inventory"></el-input>
 			</el-form-item>
-			<el-form-item label="新旧度">
-				<el-input tyle="width:200px" v-model="goodsDetail.oldAndnew"></el-input>
+			<el-form-item label="新旧度:">
+				<el-input style="width:200px" v-model="goodsDetail.oldAndnew"></el-input>
 			</el-form-item>
-			<el-form-item label="地址">
-				<el-input tyle="width:200px" v-model="goodsDetail.delivery"></el-input>
+			<el-form-item label="地址:">
+				<el-input style="width:200px" v-model="goodsDetail.delivery"></el-input>
 			</el-form-item>
-			<el-form-item label="可以议价">
+			<el-form-item label="议价:">
 				<el-radio v-model="goodsDetail.bargain" label="1">可以</el-radio>
 				<el-radio v-model="goodsDetail.bargain" label="0">不可以</el-radio>
 			</el-form-item>
-			<el-form-item label="类型">
+			<el-form-item label="类型:">
 				<template>
 					<el-select v-model="setType" placeholder="请选择" multiple>
 						<el-option v-for="item in goodstypes" :key="item.index" :label="item.type"
@@ -45,24 +45,25 @@
 
 <script>
 	export default {
-		props: {
-			sellerId: null,
-			goodsId: null
+		computed:{
+			sellerId(){
+					return this.$store.state.userId;
+			}	
 		},
 		data() {
 			return {
 				goodsDetail: {
 					"user_id": this.sellerId,
-					"price": 10,
-					"inventory": 10,
-					"oldAndnew": 90,
+					"price": 0,
+					"inventory": 0,
+					"oldAndnew": 0,
 					"state": 1,
-					"name": "书2",
-					"details": "这是一本书",
+					"name": "",
+					"details": "",
 					"onsaleDate": new Date(),
 					"picture": "",
 					"bargain": "1",
-					"delivery": "北京",
+					"delivery": "",
 					"goodstype": []
 				},
 				goodstypes: [],

@@ -1,5 +1,5 @@
 <template>
-	<div class="product" v-if="!this.isSeller()">
+	<div class="product">
 		<router-link :to="'/goodsDetail/' + info.id" class="product-main">
 			<img :src="this.PicHOST + info.picture" style="height:150px;">
 			<div class="product-cost">¥ {{ info.price }}</div>

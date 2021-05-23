@@ -1,14 +1,21 @@
 <template>
 	<div>
-        <OrderView v-for="item in userOrder" :key="item.index" :userOrder="item"></OrderView>
+		<el-row>
+			<menu2></menu2>
+		</el-row>
+		<el-row>
+			<OrderView v-for="item in userOrder" :key="item.index" :userOrder="item"></OrderView>
+		</el-row>
 	</div>
 </template>
 
 <script>
-	import OrderView from '../../components/OrderView.vue'
+	import OrderView from '../../components/userOrder/OrderView.vue'
+	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
 		components:{
-			OrderView
+			OrderView,
+			menu2
 		},
 		computed: {
 		},

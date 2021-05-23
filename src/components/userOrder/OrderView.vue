@@ -19,8 +19,8 @@
 </template>
 
 <script>
-	import * as dateUtils from "../util/myDate.js"
-	import OrderGoodView from "./OrderGoodView.vue"
+	import * as dateUtils from "../../util/myDate.js"
+	import OrderGoodView from './OrderGoodView.vue'
 	export default {
 		props:['userOrder'],
 		components:{

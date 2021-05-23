@@ -1,55 +1,67 @@
 <template>
 	<div>
-		<el-table :data="goodsCartDetail">
-			<el-table-column prop="id" width="180">
-			</el-table-column>
-			<el-table-column prop="name" label="名称" width="180">
-			</el-table-column>
-			<el-table-column prop="price" label="价格" width="180">
-			</el-table-column>
-			<el-table-column prop="count" label="数量" width="180">
-			</el-table-column>
-			<el-table-column label="操作1" width="90">
-				<template slot-scope="scope">
-					<el-button size="mini" @click.stop="editGoods(scope.$index,1)" icon="el-icon-plus" circle>
-					</el-button>
-					<el-button size="mini" @click.stop="editGoods(scope.$index,-1)" icon="el-icon-minus" circle>
-					</el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="操作2" width="90">
-				<template slot-scope="scope">
-					<el-button @click.stop="deleteGoods(scope.$index)" size="small">
-						删除
-					</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
-
-		<div v-show="goodsCart.length">
+		<el-row>
+		     <menu2></menu2>
+		</el-row>
+		<el-row>
 			<div>
-				共计 <span>{{ countAll }}</span> 件商品
+				<el-table :data="goodsCartDetail">
+					<el-table-column prop="id" width="180">
+					</el-table-column>
+					<el-table-column prop="name" label="名称" width="180">
+					</el-table-column>
+					<el-table-column prop="price" label="价格" width="180">
+					</el-table-column>
+					<el-table-column prop="count" label="数量" width="180">
+					</el-table-column>
+					<el-table-column label="操作1" width="90">
+						<template slot-scope="scope">
+							<el-button size="mini" @click.stop="editGoods(scope.$index,1)" icon="el-icon-plus" circle>
+							</el-button>
+							<el-button size="mini" @click.stop="editGoods(scope.$index,-1)" icon="el-icon-minus" circle>
+							</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作2" width="90">
+						<template slot-scope="scope">
+							<el-button @click.stop="deleteGoods(scope.$index)" size="small">
+								删除
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			
+				<div v-show="goodsCart.length">
+					<div>
+						共计 <span>{{ countAll }}</span> 件商品
+					</div>
+					<div>
+						应付总额 <span>¥ {{ costAll }}</span>
+						<br>
+					</div>
+				</div>
+			
+				<p>收货地址：{{currentRow}}</p>
+				<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
+					@current-change="handleCurrentChange">
+					<el-table-column prop="address" label="地址" width="180">
+					</el-table-column>
+					<el-table-column prop="phone" label="电话" width="180">
+					</el-table-column>
+				</el-table>
+				<el-button @click="buy()">支付</el-button>
 			</div>
-			<div>
-				应付总额 <span>¥ {{ costAll }}</span>
-				<br>
-			</div>
-		</div>
-
-		<p>收货地址：{{currentRow}}</p>
-		<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
-			@current-change="handleCurrentChange">
-			<el-table-column prop="address" label="地址" width="180">
-			</el-table-column>
-			<el-table-column prop="phone" label="电话" width="180">
-			</el-table-column>
-		</el-table>
-		<el-button @click="buy()">支付</el-button>
+		</el-row>
 	</div>
+	
 </template>
 
 <script>
+	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
+		components:{
+			menu2
+		},
 		computed: {
 			goodsCart() {
 				return this.$store.state.ShoppingCart;

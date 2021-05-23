@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-container>
+		<!-- <el-container>
 			<el-header>
 				<div>
 					<el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -28,7 +28,8 @@
 					</div>
 				</el-main>
 			</el-container>
-		</el-container>
+		</el-container> -->
+		<router-view></router-view>
 	</div>
 </template>
 
@@ -41,7 +42,7 @@
 			}
 		},
 		components: {
-            //WebSocket
+           
 		},
 		computed: {
 			userName() {
@@ -49,58 +50,7 @@
 			}
 		},
 		methods: {
-			handleSelect(key, keyPath) {
-				switch (key) {
-					case "1":
-						this.$router.push('/login');
-						break;
-					case "2":
-						this.$router.push('/shopping');
-						break;
-					case "3":
-						this.$router.push('/audit');
-						break;
-					case "4":
-						this.$router.push('/shoppingCart');
-						break;
-					case "5":
-						this.$router.push('/userCollection');
-						break;
-					case "6":
-						this.$router.push('/userHome');
-						break;
-					case "7":
-						this.$router.push('/userOrder');
-						break;
-					case "8":
-						this.$router.push('/sellerHome');
-						break;
-					case "9":
-						this.$router.push('/chat');
-						break;
-					case "10":
-						this.logout();
-						break;
-				}
-
-			},
-			logout() {
-				var url = this.HOST + "/logout";
-				this.$axios({
-					method: "post",
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-					},
-					url: url
-				}).then(response => {
-					alert(response.data.msg);
-					this.$store.commit('setUserId', "");
-					this.$store.commit('setUserName', "");
-					this.$store.commit('emptyCart');
-					sessionStorage.clear();
-					this.$router.push('/login');
-				});
-			}
+		
 
 		},
 		created() {

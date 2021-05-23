@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import * as dateUtils from "../util/myDate.js"
+	import * as dateUtils from '../../util/myDate.js'
 	export default {
 		props: ['UserMessage', 'isleft'],
 		data() {

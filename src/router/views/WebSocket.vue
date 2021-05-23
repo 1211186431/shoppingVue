@@ -5,7 +5,7 @@
 </template>
 
 <script>
-	import MyChat from '../../components/MyChat.vue'
+	import MyChat from '../../components/userChat/MyChat.vue'
 	export default {
 		props: ['dialogTableVisible'],
 		components: {

@@ -5,6 +5,7 @@
 				<el-row>
 					<el-col :span="10">
 						<div>
+							<span>{{orderGoods.id}}</span>
 							<img :src="this.HOST+orderGoods.picture" style="width: 20px;height: 1.25rem;" />
 							<span>{{orderGoods.name}}</span>
 							<span>------</span>
@@ -13,7 +14,6 @@
 							<span>金额：{{orderGoods.price*orderGoods.goodsNum}}</span>
 							<span>------</span>
 							<span>状态：{{orderGoods.state}}</span>
-
 						</div>
 					</el-col>
 					<el-col :span="10">
@@ -29,7 +29,7 @@
 					</el-col>
 					<el-col :span="4">
 						<div>
-							<el-button>退货</el-button>
+							<el-button @click="returnGoods()">退货</el-button>
 							<el-button @click="dialogTableVisible=true;">评论</el-button>
 						</div>
 					</el-col>
@@ -139,6 +139,19 @@
 						this.userComment.comment = response.data.content;
 						this.userComment.id = response.data.id;
 					}
+				});
+			},
+			returnGoods(){
+				var url = this.HOST + "/Order/update";
+				this.$axios({
+					method: "post",
+					url: url,
+					params: {
+						OrderId: this.orderGoods.id,
+						state:5
+					}
+				}).then(response => {
+					
 				});
 			}
 		},

@@ -39,8 +39,12 @@ const routers = [{
 
 	},
 	{
-		path: '/audit',
-		component: (resolve) => require(['./router/views/Audit.vue'], resolve)
+		path: '/admin',
+		component: (resolve) => require(['./router/views/adminView.vue'], resolve)
+	},
+	{
+		path: '/seller',
+		component: (resolve) => require(['./router/views/sellerView.vue'], resolve)
 	},
 	{
 		path: '/chat',
@@ -67,18 +71,6 @@ const routers = [{
 	{
 		path: '/userHome',
 		component: (resolve) => require(['./router/views/userHome.vue'], resolve)
-	},
-	{
-		path: '/sellerHome',
-		component: (resolve) => require(['./router/views/seller/sellerHome.vue'], resolve)
-	},
-	{
-		path: '/sellerGoods',
-		component: (resolve) => require(['./router/views/seller/sellerGoods.vue'], resolve)
-	},
-	{
-		path: '/sellerGoodsDetails/:goodsId',
-		component: (resolve) => require(['./router/views/seller/sellerGoodsDetails.vue'], resolve)
 	},
 	{
 		path: '/userOrder',

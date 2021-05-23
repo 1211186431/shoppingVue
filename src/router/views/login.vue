@@ -12,6 +12,7 @@
 				<el-button type="primary" @click="login">登录</el-button>
 				<el-button @click="$router.push('/register')">注册</el-button>
 			</el-form-item>
+			<el-button @click="$router.push('/shopping')">返回商城</el-button>
 		</el-form>
 	</div>
 </template>

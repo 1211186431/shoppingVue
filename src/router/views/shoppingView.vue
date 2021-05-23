@@ -1,6 +1,9 @@
 <template>
 	<div>
 		<el-row>
+			<menu2></menu2>
+		</el-row>
+		<el-row>
 			<el-col :span="10">
 				<el-input placeholder="请输入内容" v-model="goodsSort.goodsName"></el-input>
 			</el-col>
@@ -10,7 +13,8 @@
 		</el-row>
 		<el-row>
 			<el-radio-group v-model="goodsSort.typeId" @change="getGoods()">
-				<el-radio-button v-for="item in goodsType" :key="item.type_id" :label="item.type_id">{{item.type}}</el-radio-button>
+				<el-radio-button v-for="item in goodsType" :key="item.type_id" :label="item.type_id">{{item.type}}
+				</el-radio-button>
 			</el-radio-group>
 		</el-row>
 		<el-row>
@@ -33,16 +37,16 @@
 				</el-pagination>
 			</div>
 		</el-row>
-
-
 	</div>
 </template>
 
 <script>
-	import Product from "../../components/product.vue"
+	import Product from '../../components/shopping/product.vue'
+	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
 		components: {
-			Product
+			Product,
+			menu2
 		},
 		computed: {
 			userName() {
@@ -61,15 +65,15 @@
 					"totalPages": 0,
 					data: []
 				},
-				goodsSort:{
-					typeId:0,
-					priceSort:"",
-					gradeSort:"",
-					salesSort:"",
-					goodsName:""
+				goodsSort: {
+					typeId: 0,
+					priceSort: "",
+					gradeSort: "",
+					salesSort: "",
+					goodsName: ""
 				},
-				goodsType:[],
-				papeNum:1
+				goodsType: [],
+				papeNum: 1
 			}
 		},
 		methods: {
@@ -78,23 +82,23 @@
 				this.$axios({
 					method: "get",
 					url: url,
-					params:{
+					params: {
 						pageNum: this.papeNum,
-						typeId:this.goodsSort.typeId,
-						priceSort:this.goodsSort.priceSort,
-						gradeSort:this.goodsSort.gradeSort,
-						salesSort:this.goodsSort.salesSort,
-						goodsName:this.goodsSort.goodsName
+						typeId: this.goodsSort.typeId,
+						priceSort: this.goodsSort.priceSort,
+						gradeSort: this.goodsSort.gradeSort,
+						salesSort: this.goodsSort.salesSort,
+						goodsName: this.goodsSort.goodsName
 					}
 				}).then(response => {
 					this.goodsList = response.data;
 				});
 			},
 			PageChage(x) {
-				this.papeNum=x;
+				this.papeNum = x;
 				this.getGoods();
 			},
-			getGoodsType(){
+			getGoodsType() {
 				var url = this.HOST + "/goods/getAllType";
 				this.$axios({
 					method: "get",
@@ -104,8 +108,7 @@
 				});
 			}
 		},
-		watch:{
-		},
+		watch: {},
 		mounted() {
 			this.getGoods();
 			this.getGoodsType();
@@ -115,5 +118,5 @@
 </script>
 
 <style>
-
+	
 </style>

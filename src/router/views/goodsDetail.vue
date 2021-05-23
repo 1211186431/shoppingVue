@@ -1,87 +1,99 @@
 <template>
 	<div>
-		<div v-if="goodsDetail">
-			<div class="product2">
-				<el-row :gutter="10">
-					<el-col :span="10">
-						<div class="img">
-							<img :src="this.PicHOST+goodsDetail.picture">
-						</div>
-					</el-col>
-					<el-col :span="14">
-						<el-col :span="14">
-							<div class="product-name">
-								<h1 class="name">{{goodsDetail.name}}</h1>
-							</div>
-						</el-col>
-
-						<el-col :span="14">
-							<div class="product-price">
-								<span style="font-size:15px ;color:  #717273;">售价 ￥</span>
-								<div class="price">{{goodsDetail.price}}</div>
-							</div>
-						</el-col>
-
-						<el-col :span="14">
-							<div class="product-inventory">
-								<span style="font-size:15px ;color:  #717273;">库存 :</span>
-								<div class="inventory">{{goodsDetail.inventory}}</div>
-							</div>
-						</el-col>
-
-						<el-col :span="14">
-							<div class="product-oldAndnew">
-								<span style="font-size:15px ;color:  #717273;">新旧程度 :</span>
-								<div class="oldAndnew">{{goodsDetail.oldAndnew}}</div>
-							</div>
-						</el-col>
-
-						<el-col :span="14">
-							<div class="product-bargain">
-								<span style="font-size:15px ;color:  #717273;">是否接受还价 :</span>
-								<div class="bargain">
-									<el-switch v-model="bargain"></el-switch>
+		<el-row>
+			<menu2></menu2>
+		</el-row>
+		<el-row>
+			<div>
+				<div v-if="goodsDetail">
+					<div class="product2">
+						<el-row :gutter="10">
+							<el-col :span="10">
+								<div class="img">
+									<img :src="this.PicHOST+goodsDetail.picture">
 								</div>
-							</div>
-						</el-col>
+							</el-col>
+							<el-col :span="14">
+								<el-col :span="14">
+									<div class="product-name">
+										<h1 class="name">{{goodsDetail.name}}</h1>
+									</div>
+								</el-col>
 
-						<el-col :span="14">
-							<div class="product-delivery">
-								<span style="font-size:15px ;color:  #717273;">发货地 :</span>
-								<div class="delivery">{{goodsDetail.delivery}}</div>
-							</div>
-						</el-col>
+								<el-col :span="14">
+									<div class="product-price">
+										<span style="font-size:15px ;color:  #717273;">售价 ￥</span>
+										<div class="price">{{goodsDetail.price}}</div>
+									</div>
+								</el-col>
 
-						<el-col :span="14">
-							<div class="addCart">
-								<el-button type="primary" @click="addCart">加入购物车</el-button>
-							</div>
-							<div class="collection">
-								<el-button icon="el-icon-star-off" @click="addCollection()" v-show="isColl<0">加入收藏
-								</el-button>
-								<el-button icon="el-icon-star-on" @click="deleteCollection()" v-show="isColl>0">已收藏
-								</el-button>
-							</div>
-						</el-col>
-						<el-col :span="14">
-							<div class="info">
-								{{goodsDetail.details}}
-							</div>
+								<el-col :span="14">
+									<div class="product-inventory">
+										<span style="font-size:15px ;color:  #717273;">库存 :</span>
+										<div class="inventory">{{goodsDetail.inventory}}</div>
+									</div>
+								</el-col>
 
-						</el-col>
-					</el-col>
-				</el-row>
+								<el-col :span="14">
+									<div class="product-oldAndnew">
+										<span style="font-size:15px ;color:  #717273;">新旧程度 :</span>
+										<div class="oldAndnew">{{goodsDetail.oldAndnew}}</div>
+									</div>
+								</el-col>
+
+								<el-col :span="14">
+									<div class="product-bargain">
+										<span style="font-size:15px ;color:  #717273;">是否接受还价 :</span>
+										<div class="bargain">
+											<el-switch v-model="bargain"></el-switch>
+										</div>
+									</div>
+								</el-col>
+
+								<el-col :span="14">
+									<div class="product-delivery">
+										<span style="font-size:15px ;color:  #717273;">发货地 :</span>
+										<div class="delivery">{{goodsDetail.delivery}}</div>
+									</div>
+								</el-col>
+
+								<el-col :span="14">
+									<div class="addCart">
+										<el-button type="primary" @click="addCart">加入购物车</el-button>
+									</div>
+									<div class="collection">
+										<el-button icon="el-icon-star-off" @click="addCollection()" v-show="isColl<0">
+											加入收藏
+										</el-button>
+										<el-button icon="el-icon-star-on" @click="deleteCollection()" v-show="isColl>0">
+											已收藏
+										</el-button>
+									</div>
+								</el-col>
+								<el-col :span="14">
+									<div class="info">
+										{{goodsDetail.details}}
+									</div>
+
+								</el-col>
+							</el-col>
+						</el-row>
+					</div>
+				</div>
+				<contactUser :goodsId="goodsId"></contactUser>
 			</div>
-		</div>
-		<contactUser :goodsId="goodsId"></contactUser>
+		</el-row>
 	</div>
+
 </template>
 
 <script>
-	import contactUser from '../../components/contactUser.vue'
+	import contactUser from '../../components/userChat/contactUser.vue'
+	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
 		components: {
-           contactUser
+			contactUser,
+			menu2
 		},
 		computed: {
 			goodsId() {
@@ -104,14 +116,14 @@
 				else
 					return -1;
 			},
-			userId(){
+			userId() {
 				return this.$store.state.userId;
 			}
 		},
 		data() {
 			return {
 				goodsDetail: {},
-				sellerDetil:null
+				sellerDetil: null
 			}
 		},
 		methods: {
@@ -139,8 +151,7 @@
 				if (cart == null) {
 					this.$store.dispatch('addUserCart', s);
 					alert("加入成功");
-				} 
-				else
+				} else
 					alert("购物车中已拥有");
 			},
 			addCollection() {

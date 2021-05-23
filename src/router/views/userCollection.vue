@@ -1,26 +1,38 @@
 <template>
 	<div>
-		<el-table :data="collection" v-if="collection">
-			<el-table-column prop="goods_id" width="180">
-			</el-table-column>
-			<el-table-column prop="name" label="名称" width="180">
-			</el-table-column>
-			<el-table-column prop="price" label="价格" width="180">
-			</el-table-column>
-			<el-table-column prop="createDate" label="收藏时间" width="180">
-			</el-table-column>
-			<el-table-column label="操作" width="90">
-				<template slot-scope="scope">
-					<el-button size="mini" @click.stop="deleteColl(scope.$index)" icon="el-icon-delete" type="danger">
-					</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
+		<el-row>
+		     <menu2></menu2>
+		</el-row>
+		<el-row>
+			<div>
+				<el-table :data="collection" v-if="collection">
+					<el-table-column prop="goods_id" width="180">
+					</el-table-column>
+					<el-table-column prop="name" label="名称" width="180">
+					</el-table-column>
+					<el-table-column prop="price" label="价格" width="180">
+					</el-table-column>
+					<el-table-column prop="createDate" label="收藏时间" width="180">
+					</el-table-column>
+					<el-table-column label="操作" width="90">
+						<template slot-scope="scope">
+							<el-button size="mini" @click.stop="deleteColl(scope.$index)" icon="el-icon-delete" type="danger">
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+		</el-row>
 	</div>
+	
 </template>
 
 <script>
+	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
+		components: {
+			menu2
+		},
 		data() {
 			return {
 				collection: []
