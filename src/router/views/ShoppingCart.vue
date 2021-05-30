@@ -1,14 +1,29 @@
 <template>
-	<div>
+	<div style="width: 1250px;overflow: hidden;margin: 0 auto;">
 		<el-row>
 		     <menu2></menu2>
 		</el-row>
 		<el-row>
-			<div>
+			<search></search>
+		</el-row>
+		<el-row style="background-color: #F3F3F3;">
+			<div  class="cart_main">
+				<el-row style="background-color: #FFFFFF;margin-top: 10px;">
+					<span>
+						<h4 style="margin-left: 10px;">我的购物车</h4>
+					</span>
+					<el-divider></el-divider>
+				</el-row>
 				<el-table :data="goodsCartDetail">
-					<el-table-column prop="id" width="180">
-					</el-table-column>
-					<el-table-column prop="name" label="名称" width="180">
+                   <el-table-column  width="180">
+                   	<template slot-scope="scope">
+                   		<el-image style="width: 100px; height: 100px"
+                   			:src="getPicUrl(scope.$index,1)"
+                   			:preview-src-list="getPicUrl(scope.$index,2)">
+                   		</el-image>
+                   	</template>
+                   </el-table-column>
+					<el-table-column prop="name" label="名称" width="100">
 					</el-table-column>
 					<el-table-column prop="price" label="价格" width="180">
 					</el-table-column>
@@ -24,7 +39,7 @@
 					</el-table-column>
 					<el-table-column label="操作2" width="90">
 						<template slot-scope="scope">
-							<el-button @click.stop="deleteGoods(scope.$index)" size="small">
+							<el-button @click.stop="deleteGoods(scope.$index)" size="small" type="danger">
 								删除
 							</el-button>
 						</template>
@@ -41,7 +56,7 @@
 					</div>
 				</div>
 			
-				<p>收货地址：{{currentRow}}</p>
+				<p>收货地址:</p>
 				<el-table :data="userAddress" v-if="userAddress.length" highlight-current-row
 					@current-change="handleCurrentChange">
 					<el-table-column prop="address" label="地址" width="180">
@@ -49,7 +64,7 @@
 					<el-table-column prop="phone" label="电话" width="180">
 					</el-table-column>
 				</el-table>
-				<el-button @click="buy()">支付</el-button>
+				<el-button @click="buy()" style="float: right;color: white;margin-right: 2%;margin-top: 20px;" type="primary" size="medium">支付</el-button>
 			</div>
 		</el-row>
 	</div>
@@ -58,9 +73,11 @@
 
 <script>
 	import menu2 from "../../components/shopping/menu2.vue"
+	import search from "../../components/shopping/search.vue"
 	export default {
-		components:{
-			menu2
+		components: {
+			menu2,
+			search
 		},
 		computed: {
 			goodsCart() {
@@ -123,6 +140,16 @@
 			}
 		},
 		methods: {
+			getPicUrl(x, num) {
+				var picUrl=this.goodsCartDetail[x].picture;
+				if (num == 1)
+					return this.PicHOST + picUrl;
+				else {
+					var u = [];
+					u.push(this.PicHOST + picUrl);
+					return u;
+				}
+			},
 			generateUUID() {
 				var d = new Date().getTime();
 				if (window.performance && typeof window.performance.now === "function") {
@@ -169,6 +196,7 @@
 						this.OrderDetail = response.data;
 						this.$store.dispatch('deleteAllGoods',this.$store.state.userId);
 						alert("购买成功");
+						this.$router.push("shopping");
 					}).catch(e => {
 						alert("订单错误");
 					});
@@ -231,4 +259,11 @@
 </script>
 
 <style>
+	.cart_main {
+		width: 70%;
+		background-color: #ffffff;
+		height: 600px;
+		margin-left: 15%;
+		margin-right: 15%;
+	}
 </style>

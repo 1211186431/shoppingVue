@@ -1,43 +1,49 @@
 <template>
 	<div>
-		<el-card class="box-card" style="width: 700px;">
-			<div slot="header" class="clearfix">
-				<span>与{{to}}聊天中</span>
-			</div>
-			<div>
-				<el-row>
-					<el-col :span="4">
-						<div v-if="users.length>0">
-							<el-menu @select="handleSelect">
-								<el-menu-item v-for="item in this.users" :key="item.userName" :index="item.userName">
-									<el-badge :is-dot="item.isTalk" v-show="true">
-										{{item.userName}}
-									</el-badge>
-								</el-menu-item>
-							</el-menu>
-						</div>
-						<div v-if="users.length==0">
-							<span>暂无联系</span>
-						</div>
-						<el-button>清空</el-button>
-					</el-col>
-					<el-col :span="20">
-						<div>
-							<div style="height: 200px;overflow:auto" ref="chatContent">
-								<Chat v-for="item in this.getMessage" :UserMessage="item" :isleft="isleft(item)"
-									:key="item.chatId">
-								</Chat>
+		<!-- <el-button type="text" @click="dialogVisible=true">我的消息</el-button> -->
+		<el-dialog title="聊天" :visible.sync="dialogVisible" width="60%">
+			<el-card class="box-card" style="width: auto;">
+				<div slot="header" class="clearfix">
+					<span>与{{to}}聊天中</span>
+				</div>
+				<div>
+					<el-row>
+						<el-col :span="4">
+							<div v-if="users.length>0">
+								<el-menu @select="handleSelect">
+									<el-menu-item v-for="item in this.users" :key="item.userName"
+										:index="item.userName">
+										<el-badge :is-dot="item.isTalk" v-show="true">
+											{{item.userName}}
+										</el-badge>
+									</el-menu-item>
+								</el-menu>
 							</div>
+							<div v-if="users.length==0">
+								<span>暂无联系</span>
+							</div>
+							<el-button>清空</el-button>
+						</el-col>
+						<el-col :span="20">
 							<div>
-								<el-input style="width: 450px;" v-model="content"></el-input>
-								<el-button icon="el-icon-s-promotion" type="primary" @click="sendName()">发送</el-button>
+								<div style="height: 200px;overflow:auto" ref="chatContent">
+									<Chat v-for="item in this.getMessage" :UserMessage="item" :isleft="isleft(item)"
+										:key="item.chatId">
+									</Chat>
+								</div>
+								<div>
+									<el-input style="width: 450px;" v-model="content"></el-input>
+									<el-button icon="el-icon-s-promotion" type="primary" @click="sendName()">发送
+									</el-button>
+								</div>
 							</div>
-						</div>
-					</el-col>
-				</el-row>
-			</div>
+						</el-col>
+					</el-row>
+				</div>
 
-		</el-card>
+			</el-card>
+		</el-dialog>
+
 
 	</div>
 </template>
@@ -47,7 +53,7 @@
 	import Stomp from 'stompjs';
 	import Chat from './Chat2.vue'
 	export default {
-		props: ['toUser'],
+		props: ['toUser', 'd'],
 		components: {
 			Chat
 		},
@@ -55,7 +61,7 @@
 			userName() {
 				return this.$store.state.userName;
 			},
-			users(){
+			users() {
 				return this.$store.state.talkList;
 			}
 		},
@@ -66,7 +72,8 @@
 				greeting: "",
 				stompClient: null,
 				getMessage: [],
-				to: this.toUser
+				to: this.toUser,
+				dialogVisible: false
 			}
 		},
 		methods: {
@@ -136,8 +143,11 @@
 			}
 		},
 		watch: {
-			to(old, newval) {
+			to(newval,old) {
 				this.getUserChat();
+			},
+			d(newval,old) {
+					this.dialogVisible = true;
 			}
 		},
 		mounted() {
@@ -146,10 +156,10 @@
 				this.getUserChat();
 		},
 		beforeCreate() {
-			console.log("1111")
+			//console.log("1111")
 		},
 		created() {
-			console.log("createChat");
+			//console.log("createChat");
 		},
 		beforeDestroy() {
 			if (this.stompClient != null) {

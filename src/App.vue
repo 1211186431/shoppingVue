@@ -1,34 +1,5 @@
 <template>
 	<div>
-		<!-- <el-container>
-			<el-header>
-				<div>
-					<el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
-						<el-menu-item index="1" v-if="userName.length==0">登录</el-menu-item>
-						<el-menu-item index="2">购物</el-menu-item>
-						<el-menu-item index="3">管理员</el-menu-item>
-						<el-menu-item index="4">购物车</el-menu-item>
-						<el-menu-item index="5">收藏</el-menu-item>
-						<el-menu-item index="6">用户信息</el-menu-item>
-						<el-menu-item index="7">用户订单</el-menu-item>
-						<el-menu-item index="8">商家</el-menu-item>
-						<el-menu-item index="9" v-if="userName!=''">
-							<el-badge :is-dot="true" class="item">
-								<el-button icon="el-icon-s-comment"></el-button>
-							</el-badge>
-						</el-menu-item>
-						<el-menu-item index="10">登出</el-menu-item>
-					</el-menu>
-				</div>
-			</el-header>
-			<el-container>
-				<el-main>
-					<div>
-						<router-view></router-view>
-					</div>
-				</el-main>
-			</el-container>
-		</el-container> -->
 		<router-view></router-view>
 	</div>
 </template>

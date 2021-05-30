@@ -2,13 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui'
 import axios from 'axios'
+
+axios.defaults.timeout = 5000;
 import SockJS from "sockjs-client";
 import Stomp from "stompjs"
 import VueRouter from 'vue-router'
 Vue.prototype.$axios = axios;
 
 Vue.prototype.HOST = "/api";
-Vue.prototype.PicHOST = "http://localhost:8081";
+Vue.prototype.PicHOST = "http://localhost:8081/image";
 const mainHost = "/api";
 // Vue.prototype.HOST = "http://47.94.16.59:8081";
 // Vue.prototype.PicHOST = "http://47.94.16.59:8081";
@@ -34,8 +36,17 @@ const routers = [{
 		component: (resolve) => require(['./router/views/login.vue'], resolve)
 	},
 	{
+		path: '/userseller',
+		component: (resolve) => require(['./router/views/userseller.vue'], resolve)
+	},
+	{
 		path: '/shopping',
-		component: (resolve) => require(['./router/views/shoppingView.vue'], resolve)
+		component: (resolve) => require(['./router/views/shopping.vue'], resolve)
+
+	},
+	{
+		path: '/shopping2/:search/:type',
+		component: (resolve) => require(['./router/views/shopping2.vue'], resolve)
 
 	},
 	{
@@ -45,11 +56,6 @@ const routers = [{
 	{
 		path: '/seller',
 		component: (resolve) => require(['./router/views/sellerView.vue'], resolve)
-	},
-	{
-		path: '/chat',
-		//component: (resolve) => require(['./router/views/WebSocket.vue'], resolve)
-		component: WebSocket
 	},
 	{
 		path: '/register',
@@ -74,7 +80,7 @@ const routers = [{
 	},
 	{
 		path: '/userOrder',
-		component: (resolve) => require(['./router/views/UserOrder.vue'], resolve)
+		component: (resolve) => require(['./router/views/userOrder.vue'], resolve)
 	},
 	{
 		path: '*',
@@ -122,9 +128,13 @@ const store = new Vuex.Store({
 		userName: "",
 		ShoppingCart: [],
 		UserCollection: [],
-		talkList: []
+		talkList: [],
+		userRole: ""
 	},
 	mutations: {
+		setUserRole(state, userRole) {
+			state.userRole = userRole;
+		},
 		setUserId(state, userId) {
 			state.userId = userId;
 		},
@@ -216,7 +226,6 @@ const store = new Vuex.Store({
 					userId: store.state.userId
 				}
 			}).then(response => {
-				console.log(response.data);
 				context.commit("setCart", response.data);
 			});
 		},

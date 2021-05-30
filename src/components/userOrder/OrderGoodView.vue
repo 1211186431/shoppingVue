@@ -1,25 +1,44 @@
 <template>
-	<div>
-		<el-card class="box-card">
+	<div style="overflow: auto;width: 750px;">
+		<el-card>
 			<div>
 				<el-row>
-					<el-col :span="10">
+					<el-col :span="14">
 						<div>
-							<span>{{orderGoods.id}}</span>
-							<img :src="this.HOST+orderGoods.picture" style="width: 20px;height: 1.25rem;" />
-							<span>{{orderGoods.name}}</span>
-							<span>------</span>
-							<span>数量：x{{orderGoods.goodsNum}}</span>
-							<span>------</span>
-							<span>金额：{{orderGoods.price*orderGoods.goodsNum}}</span>
-							<span>------</span>
-							<span>状态：{{orderGoods.state}}</span>
+							<el-row>
+								<el-col :span="10">
+									<img :src="this.PicHOST+orderGoods.picture" style="width: 50px;height:50px" />
+									<span>{{orderGoods.name}}</span>
+								</el-col>
+								<el-col :span="5">
+									<span>{{orderGoods.goodsNum}}</span>
+								</el-col>
+								<el-col :span="5">
+									<span>{{orderGoods.price*orderGoods.goodsNum}}￥</span>
+								</el-col>
+								<el-col :span="4">
+									<el-tag>
+									     {{getState(orderGoods.state)}}
+									</el-tag>
+								</el-col>
+							</el-row>
 						</div>
 					</el-col>
-					<el-col :span="10">
+					<el-col :span="5">
 						<div>
-							<el-popover placement="right" width="200" trigger="hover">
-								<span>{{userAddress}}</span>
+							<el-popover placement="right" trigger="hover">
+								
+								<div>
+									<el-row>
+										<span>收货地址：{{userAddress.address}}</span>
+									</el-row>
+									<el-row>
+										<span>电话：{{userAddress.phone}}</span>
+									</el-row>
+									<el-row>
+										<span>收货人：{{userAddress.receiver}}</span>
+									</el-row>
+								</div>
 								<div slot="reference">
 									<span>{{userAddress.receiver}}</span>
 									<i class="el-icon-user"></i>
@@ -29,8 +48,15 @@
 					</el-col>
 					<el-col :span="4">
 						<div>
-							<el-button @click="returnGoods()">退货</el-button>
-							<el-button @click="dialogTableVisible=true;">评论</el-button>
+							<el-row>
+								<el-col :span="10">
+									<el-button @click="returnGoods()" size="mini">退货</el-button>
+								</el-col>
+								<el-col :span="10">
+									<el-button @click="dialogTableVisible=true;" size="mini">评论</el-button>
+								</el-col>
+							</el-row>
+
 						</div>
 					</el-col>
 				</el-row>
@@ -84,6 +110,20 @@
 			}
 		},
 		methods: {
+			getState(state) {
+				switch (state) {
+					case -1:
+						return "异常"
+					case 0:
+						return "已接受"
+					case 1:
+						return "未发货"
+					case 2:
+						return "已发货"
+					case 3:
+						return "已完成"
+				}
+			},
 			sendUserComment() {
 				var that = this;
 				var url = this.HOST + "/comment/insert";
@@ -141,17 +181,17 @@
 					}
 				});
 			},
-			returnGoods(){
+			returnGoods() {
 				var url = this.HOST + "/Order/update";
 				this.$axios({
 					method: "post",
 					url: url,
 					params: {
 						OrderId: this.orderGoods.id,
-						state:5
+						state: 5
 					}
 				}).then(response => {
-					
+
 				});
 			}
 		},

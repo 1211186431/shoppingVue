@@ -59,10 +59,10 @@
 			getPicUrl(x, num) {
 				var picUrl = this.audit[x].certificates;
 				if (num == 1)
-					return this.HOST + picUrl;
+					return this.PicHOST + picUrl;
 				else {
 					var u = [];
-					u.push(this.HOST + picUrl);
+					u.push(this.PicHOST + picUrl);
 					return u;
 				}
 			},

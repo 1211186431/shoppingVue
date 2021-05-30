@@ -1,6 +1,6 @@
 <template>
 	<div>
-			<MyChat :toUser="to"></MyChat>
+		<MyChat :toUser="to"></MyChat>
 	</div>
 </template>
 

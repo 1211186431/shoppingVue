@@ -39,7 +39,7 @@
 			},
 			startTalk(){
 				this.$store.commit('addTalkList',this.userName);
-				this.$router.push('/chat');
+				// this.$router.push('/chat');
 			}
 		},
 		mounted() {

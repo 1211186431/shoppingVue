@@ -16,6 +16,9 @@
 			<el-form-item label="地址:">
 				<el-input style="width:200px" v-model="goodsDetail.delivery"></el-input>
 			</el-form-item>
+			<el-form-item label="详情:">
+				<el-input style="width:200px" v-model="goodsDetail.details"></el-input>
+			</el-form-item>
 			<el-form-item label="议价:">
 				<el-radio v-model="goodsDetail.bargain" label="1">可以</el-radio>
 				<el-radio v-model="goodsDetail.bargain" label="0">不可以</el-radio>
@@ -45,15 +48,15 @@
 
 <script>
 	export default {
-		computed:{
-			sellerId(){
-					return this.$store.state.userId;
-			}	
+		computed: {
+			sellerId() {
+				return this.$store.state.userId;
+			}
 		},
 		data() {
 			return {
 				goodsDetail: {
-					"user_id": this.sellerId,
+					"user_id":0,
 					"price": 0,
 					"inventory": 0,
 					"oldAndnew": 0,
@@ -95,16 +98,17 @@
 			},
 			CreateGoods() {
 				if (this.setType != null) {
-					for (var i = 0; i < this.setType.length; i++){
-						var t=this.setType[i];
-						for(var j=0;j<this.goodstypes.length;j++){
-						     if(this.goodstypes[j].type_id==t){
-								  this.goodsDetail.goodstype.push(this.goodstypes[j]);
-								  break;
-							 }
+					for (var i = 0; i < this.setType.length; i++) {
+						var t = this.setType[i];
+						for (var j = 0; j < this.goodstypes.length; j++) {
+							if (this.goodstypes[j].type_id == t) {
+								this.goodsDetail.goodstype.push(this.goodstypes[j]);
+								break;
+							}
 						}
 					}
 				}
+				this.goodsDetail.user_id=this.sellerId;
 				var url = this.HOST + "/goods/insertGoods";
 				this.$axios({
 					method: "post",
@@ -118,8 +122,8 @@
 				});
 			},
 			onUpload(response, file, fileList) { //成功上传
-				console.log(response);
-				console.log(fileList);
+				// console.log(response);
+				// console.log(fileList);
 			}
 		},
 		mounted() {

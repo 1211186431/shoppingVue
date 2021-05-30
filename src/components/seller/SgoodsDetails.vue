@@ -124,10 +124,10 @@
 			},
 			getPicUrl(pic, num) {
 				if (num == 1)
-					return this.HOST + pic;
+					return this.PicHOST + pic;
 				else {
 					var u = [];
-					u.push(this.HOST + pic);
+					u.push(this.PicHOST + pic);
 					return u;
 				}
 			},

@@ -9,7 +9,7 @@
 					</div>
 				</el-col>
 				<el-col :span="4" style="height: 75px;float: right;">
-					<router-link to="shopping">返回</router-link>
+					<el-button type="text" @click="$router.back(-1)">返回</el-button>
 				</el-col>
 			</el-row>
 		</div>

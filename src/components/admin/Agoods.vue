@@ -74,7 +74,7 @@
 			},
 			getPicUrl2(x) {
 				var picUrl = this.goods[x].picture;
-				return this.HOST + picUrl;
+				return this.PicHOST + picUrl;
 			},
 			setState(row) {
 				alert(this.goods[row].state);
