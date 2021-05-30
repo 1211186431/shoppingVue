@@ -83,17 +83,22 @@
 				<contactUser :goodsId="goodsId"></contactUser>
 			</div>
 		</el-row>
+		<el-row>
+			<Scomment2 :goodsId="goodsId"></Scomment2>
+		</el-row>
 	</div>
 
 </template>
 
 <script>
+	import Scomment2 from '../../components/seller/Scomment2.vue'
 	import contactUser from '../../components/userChat/contactUser.vue'
 	import menu2 from "../../components/shopping/menu2.vue"
 	export default {
 		components: {
 			contactUser,
-			menu2
+			menu2,
+			Scomment2
 		},
 		computed: {
 			goodsId() {

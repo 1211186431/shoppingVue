@@ -60,7 +60,7 @@
 					"price": 0,
 					"inventory": 0,
 					"oldAndnew": 0,
-					"state": 1,
+					"state": 0,
 					"name": "",
 					"details": "",
 					"onsaleDate": new Date(),

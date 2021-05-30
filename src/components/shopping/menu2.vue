@@ -15,7 +15,7 @@
 		<div>
 			<el-divider></el-divider>
 		</div>
-		<MyChat :d="chatOpen" v-if="false"></MyChat>
+		<MyChat :d="chatOpen" ></MyChat>
 	</div>
 </template>
 
@@ -36,6 +36,9 @@
 			},
 			userId() {
 				return this.$store.state.userId;
+			},
+			talkList(){
+				return this.$store.state.talkList;
 			}
 		},
 		methods: {
@@ -83,13 +86,17 @@
 					},
 					url: url
 				}).then(response => {
-					alert(response.data.msg);
 					this.$store.commit('setUserId', "");
 					this.$store.commit('setUserName', "");
 					this.$store.commit('emptyCart');
 					sessionStorage.clear();
 					this.$router.push('/login');
 				});
+			}
+		},
+		watch:{
+			talkList(newval,old){
+				this.chatOpen=!this.chatOpen;
 			}
 		}
 	}

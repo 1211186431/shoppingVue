@@ -38,7 +38,7 @@
 					</el-col>
 				</el-row>
 				<el-row style="margin-left: 10%;margin-right: 10%; margin-top: 10px;">
-					<el-button type="primary" @click="login" style="width: 200px;color: #FFFFFF;margin-left: 10%;">登录
+					<el-button type="primary" @click="codeChecking()" style="width: 200px;color: #FFFFFF;margin-left: 10%;">登录
 					</el-button>
 				</el-row>
 				<el-row style="margin-left: 50%;margin-top: 10px;">
@@ -107,7 +107,11 @@
 						imageCode: this.iCode
 					}
 				}).then(response => {
-					alert(response.data.msg);
+					if(response.data.msg=="正确"){
+						this.login();
+					}
+					else
+					   alert(response.data.msg)
 				});
 			},
 			refashImage() {

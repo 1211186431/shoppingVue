@@ -50,7 +50,7 @@
 						<div>
 							<el-row>
 								<el-col :span="10">
-									<el-button @click="returnGoods()" size="mini">退货</el-button>
+									<el-button @click="returnGoods()" size="mini">收货</el-button>
 								</el-col>
 								<el-col :span="10">
 									<el-button @click="dialogTableVisible=true;" size="mini">评论</el-button>
@@ -188,10 +188,10 @@
 					url: url,
 					params: {
 						OrderId: this.orderGoods.id,
-						state: 5
+						state: 3
 					}
 				}).then(response => {
-
+                      alert("已收货");
 				});
 			}
 		},

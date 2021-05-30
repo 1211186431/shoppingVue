@@ -97,10 +97,29 @@
 				});
 			},
 			setState(row) {
-				alert(this.users[row].state);
+				// var that = this;
+				// var url = this.HOST + "/Audit/getAllUser";
+				// that.$axios({
+				// 	method: "get",
+				// 	url: url,
+				// }).then(response => {
+				// 	this.users = response.data
+				// }).catch(e => {
+				// 	//console.log("权限不足");
+				// });
 			},
 			setMoney(row) {
-				alert(this.users[row].money);
+				// var that = this;
+				// // eslint-disable-next-line no-undef
+				// var url = this.HOST + "/Audit/getAllUser";
+				// that.$axios({
+				// 	method: "get",
+				// 	url: url,
+				// }).then(response => {
+				// 	this.users = response.data
+				// }).catch(e => {
+				// 	//console.log("权限不足");
+				// });
 			}
 		},
 		mounted() {

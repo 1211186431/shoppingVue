@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-button @click="startTalk()" icon="el-icon-chat-line-square"></el-button>
+		<el-button @click="startTalk()" icon="el-icon-chat-line-square">联系商家</el-button>
 	</div>
 </template>
 

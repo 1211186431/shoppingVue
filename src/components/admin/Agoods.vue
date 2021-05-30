@@ -12,7 +12,7 @@
 			<el-table-column prop="state" label="状态"></el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" @click.stop="setState(scope.$index)">设置状态</el-button>
+					<el-button size="mini" @click.stop="setState(scope.row)">设置状态</el-button>
 					<el-button size="mini" @click.stop="deleteGoods(scope.$index)">删除商品</el-button>
 				</template>
 			</el-table-column>
@@ -77,7 +77,18 @@
 				return this.PicHOST + picUrl;
 			},
 			setState(row) {
-				alert(this.goods[row].state);
+				var that = this;
+				var url = this.HOST + "/Audit/update/goods";
+				that.$axios({
+					method: "post",
+					url: url,
+					params:{
+						goodsId:row.id,
+						state:1
+					}
+				}).then(response => {
+					alert("设置成功");
+				});
 			},
 			deleteGoods(row) {
 				alert("删除成功");

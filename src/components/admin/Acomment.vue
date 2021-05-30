@@ -4,11 +4,11 @@
 			<el-table-column prop="id" label="评论编号"></el-table-column>
 			<el-table-column prop="content" label="评论"></el-table-column>
 			<el-table-column prop="state" label="状态">
-					<template slot-scope="scope">
+					<!-- <template slot-scope="scope">
 						<el-tag :type="getState(scope.row.state)">
 						      异常
 						</el-tag>
-					</template>
+					</template> -->
 			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
@@ -85,10 +85,34 @@
 				this.dialogVisible=true;
 			},
 			setState(row) {
-				alert(this.comments[row].state);
+				var that = this;
+				var url = this.HOST + "/Audit/update/comment";
+				that.$axios({
+					method: "post",
+					url: url,
+					params:{
+						commentId:this.comments[row].id,
+						state:1
+					}
+				}).then(response => {
+					alert("修改成功");
+					this.comments[row].state=1;
+				});
 			},
 			deleteComment(row) {
-				alert("删除成功");
+				var that = this;
+				var url = this.HOST + "/Audit/update/comment";
+				that.$axios({
+					method: "post",
+					url: url,
+					params:{
+						commentId:this.comments[row].id,
+						state:-1
+					}
+				}).then(response => {
+					alert("修改成功");
+					this.comments[row].state=-1;
+				});
 			}
 		},
 		mounted() {

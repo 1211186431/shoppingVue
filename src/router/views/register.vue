@@ -105,6 +105,7 @@
 						  	}
 						  }).then(response => {
 						  	this.myResponse = response.data;
+							console.log(this.myResponse);
 						  	if (this.myResponse.code == 200) {
 						  		alert(this.myResponse.msg);
 						  		this.$router.push('/login');
