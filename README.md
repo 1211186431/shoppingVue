@@ -17,7 +17,7 @@
 
 ### 系统展示
 主要界面
-[image](display/pic1.png)
-[image](display/pic7.png)
-[image](display/pic8.png)
+![image](display/pic1.png)
+![image](display/pic7.png)
+![image](display/pic8.png)
 
